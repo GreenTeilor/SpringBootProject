@@ -1,0 +1,6 @@
+body {
+    background-image: url("../assets/background.jpg");
+    color: white;
+    font-style: italic;
+    overflow-x: hidden;
+}
