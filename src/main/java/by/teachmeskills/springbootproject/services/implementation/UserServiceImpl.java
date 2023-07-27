@@ -13,11 +13,12 @@ import by.teachmeskills.springbootproject.repositories.UserRepository;
 import by.teachmeskills.springbootproject.repositories.implementation.ProductRepositoryImpl;
 import by.teachmeskills.springbootproject.repositories.implementation.UserRepositoryImpl;
 import by.teachmeskills.springbootproject.services.UserService;
-import by.teachmeskills.springbootproject.utils.ValidatorUtils;
+import by.teachmeskills.springbootproject.utils.ErrorPopulatorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
@@ -42,9 +43,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ModelAndView getUser(String email, String password, Model model) {
+    public ModelAndView getUser(String email, String password, BindingResult bindingResult, Model model) {
         try {
             ModelAndView modelAndView = new ModelAndView(PagesPaths.LOGIN_PAGE);
+            ErrorPopulatorUtils.populateError(RequestAttributesNames.EMAIL, modelAndView, bindingResult);
+            ErrorPopulatorUtils.populateError(RequestAttributesNames.PASSWORD, modelAndView, bindingResult);
             User authenticatedUser = userRepository.getUser(email, password);
             if (authenticatedUser != null) {
                 model.addAttribute(RequestAttributesNames.USER, authenticatedUser);
@@ -88,19 +91,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ModelAndView addAddressAndPhoneNumberInfo(String address, String phoneNumber, User user) {
+    public ModelAndView addAddressAndPhoneNumberInfo(String address, String phoneNumber, User user, BindingResult bindingResult) {
         try {
             Statistics statistics = new Statistics(10, 2, 5, "Фантастика");
             List<Product> list1 = new ArrayList<>(List.of(productRepository.getProductById(1), productRepository.getProductById(2), productRepository.getProductById(3)));
             List<Product> list2 = new ArrayList<>(List.of(productRepository.getProductById(2), productRepository.getProductById(1)));
             List<Order> orders = new ArrayList<>(List.of(Order.builder().id(1).date(LocalDate.now()).products(list1).userId(2).price(BigDecimal.valueOf(40.0)).build(),
                     Order.builder().id(1).date(LocalDate.now()).products(list2).userId(2).price(BigDecimal.valueOf(50.0)).build()));
-            if (ValidatorUtils.isValidAddress(address) && ValidatorUtils.isValidPhoneNumber(phoneNumber)) {
+            if (!bindingResult.hasFieldErrors(RequestAttributesNames.ADDRESS) && !bindingResult.hasFieldErrors(RequestAttributesNames.PHONE_NUMBER)) {
                 user.setAddress(address);
                 user.setPhoneNumber(phoneNumber);
                 userRepository.updateAddressAndPhoneNumber(address, phoneNumber, user.getEmail());
             }
-            return makeModelAndView(user, statistics, orders);
+            ModelAndView modelAndView = makeModelAndView(user, statistics, orders);
+            ErrorPopulatorUtils.populateError(RequestAttributesNames.ADDRESS, modelAndView, bindingResult);
+            ErrorPopulatorUtils.populateError(RequestAttributesNames.PHONE_NUMBER, modelAndView, bindingResult);
+            return modelAndView;
         } catch (BadConnectionException e) {
             logger.error(e.getMessage());
             return new ModelAndView(PagesPaths.ERROR_PAGE);
@@ -110,24 +116,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public ModelAndView create(User user) {
         ModelAndView modelAndView = new ModelAndView(PagesPaths.REGISTER_PAGE);
-        ValidatorUtils.Status status = ValidatorUtils.validateForm(user.getName(), user.getLastName(),
-                user.getEmail(), user.getBirthDate(), user.getPassword());
-        if (status == ValidatorUtils.Status.VALID) {
-            try {
-                user.setBalance(BigDecimal.valueOf(0.0));
-                user.setRegistrationDate(LocalDate.now());
-                userRepository.create(user);
-                modelAndView.addObject(RequestAttributesNames.STATUS, status.toString());
-                modelAndView.addObject(RequestAttributesNames.COLOR, "green");
-            } catch (BadConnectionException e) {
-                logger.error(e.getMessage());
-                return new ModelAndView(PagesPaths.ERROR_PAGE);
-            } catch (UserAlreadyExistsException e) {
-                modelAndView.addObject(RequestAttributesNames.STATUS, e.getMessage());
-                modelAndView.addObject(RequestAttributesNames.COLOR, "red");
-            }
-        } else {
-            modelAndView.addObject(RequestAttributesNames.STATUS, status.toString());
+        try {
+            user.setBalance(BigDecimal.valueOf(0.0));
+            user.setRegistrationDate(LocalDate.now());
+            userRepository.create(user);
+            modelAndView.addObject(RequestAttributesNames.STATUS, "Успешно");
+            modelAndView.addObject(RequestAttributesNames.COLOR, "green");
+        } catch (BadConnectionException e) {
+            logger.error(e.getMessage());
+            return new ModelAndView(PagesPaths.ERROR_PAGE);
+        } catch (UserAlreadyExistsException e) {
+            modelAndView.addObject(RequestAttributesNames.STATUS, e.getMessage());
             modelAndView.addObject(RequestAttributesNames.COLOR, "red");
         }
         return modelAndView;

@@ -19,18 +19,23 @@
         <div class="form-field d-flex align-items-center">
             <input type="text" class="js-input" name="name" id="name" placeholder="Имя">
         </div>
+        <div class="errorInput">${nameError}</div>
         <div class="form-field d-flex align-items-center">
             <input type="text" class="js-input" name="lastName" id="lastName" placeholder="Фамилия">
         </div>
+        <div class="errorInput">${lastNameError}</div>
         <div class="form-field d-flex align-items-center">
             <input type="email" class="js-input" name="email" id="email" placeholder="Email">
         </div>
+        <div class="errorInput">${emailError}</div>
         <div class="form-field d-flex align-items-center">
             <input type="password" class="js-input" name="password" id="password" placeholder="Пароль">
         </div>
+        <div class="errorInput">${passwordError}</div>
         <div class="form-field d-flex align-items-center">
             <input type="text" class="js-input" name="birthDate" id="birthDate" placeholder="Дата рождения" onfocus="(this.type='date')">
         </div>
+        <div class="errorInput">${birthDateError}</div>
         <button type="submit" class="btn mt-3">Зарегистрироваться</button>
     </form>
     <div class="text-center fs-6">

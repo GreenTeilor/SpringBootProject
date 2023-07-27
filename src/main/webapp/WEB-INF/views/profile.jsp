@@ -57,6 +57,7 @@
                                             <div>
                                                 <input class="info-input" type="text" name="address" id="address" placeholder="Адрес">
                                             </div>
+                                            <div class="errorInput">${addressError}</div>
                                         </div>
                                         <div class="media">
                                             <label for="phoneNumber">Номер телефона</label>
@@ -64,6 +65,7 @@
                                                 <input class="info-input" type="tel" name="phoneNumber" id="phoneNumber"
                                                        placeholder="Номер телефона">
                                             </div>
+                                            <div class="errorInput">${phoneNumberError}</div>
                                         </div>
                                         <button class="input-button btn btn-primary" type="submit">Отправить</button>
                                     </form>
