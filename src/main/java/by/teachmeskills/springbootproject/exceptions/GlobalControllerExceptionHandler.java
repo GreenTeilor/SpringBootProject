@@ -13,9 +13,9 @@ import org.springframework.web.servlet.ModelAndView;
 public class GlobalControllerExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(GlobalControllerExceptionHandler.class);
-    @ExceptionHandler(BadConnectionException.class)
+    @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ModelAndView handleNotFoundException(BadConnectionException e) {
+    public ModelAndView handleException(Exception e) {
         logger.error(e.getMessage());
         ModelAndView modelAndView = new ModelAndView(PagesPaths.ERROR_PAGE);
         modelAndView.addObject("info", e.getMessage());

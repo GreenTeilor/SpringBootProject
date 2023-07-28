@@ -1,0 +1,26 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html>
+<head>
+    <title>Информация</title>
+</head>
+<body>
+<div>
+    ${projectFullId}
+</div>
+<div>
+    ${groupId}
+</div>
+<div>
+    ${artifactId}
+</div>
+<div>
+    ${version}
+</div>
+<div>
+    ${name}
+</div>
+<div>
+    ${description}
+</div>
+</body>
+</html>
