@@ -1,10 +1,13 @@
 package by.teachmeskills.springbootproject.entities;
 
+import jakarta.validation.constraints.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class Cart {
+    @NotNull
     private List<Product> cart;
 
     public Cart() {
