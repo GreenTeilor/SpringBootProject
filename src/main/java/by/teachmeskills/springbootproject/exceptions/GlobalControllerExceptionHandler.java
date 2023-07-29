@@ -1,6 +1,7 @@
 package by.teachmeskills.springbootproject.exceptions;
 
 import by.teachmeskills.springbootproject.constants.PagesPaths;
+import by.teachmeskills.springbootproject.constants.RequestAttributesNames;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,15 @@ public class GlobalControllerExceptionHandler {
         logger.error(e.getMessage());
         ModelAndView modelAndView = new ModelAndView(PagesPaths.ERROR_PAGE);
         modelAndView.addObject("info", e.getMessage());
+        return modelAndView;
+    }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ModelAndView handleUserAlreadyExistsException(UserAlreadyExistsException e) {
+        ModelAndView modelAndView = new ModelAndView(PagesPaths.REGISTER_PAGE);
+        modelAndView.addObject(RequestAttributesNames.STATUS, e.getMessage());
+        modelAndView.addObject(RequestAttributesNames.COLOR, "red");
         return modelAndView;
     }
 

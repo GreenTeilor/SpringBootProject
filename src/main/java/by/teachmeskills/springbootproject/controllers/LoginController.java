@@ -4,6 +4,7 @@ import by.teachmeskills.springbootproject.constants.PagesPaths;
 import by.teachmeskills.springbootproject.constants.RequestAttributesNames;
 import by.teachmeskills.springbootproject.constants.SessionAttributesNames;
 import by.teachmeskills.springbootproject.entities.User;
+import by.teachmeskills.springbootproject.exceptions.UnableToExecuteQueryException;
 import by.teachmeskills.springbootproject.services.UserService;
 import by.teachmeskills.springbootproject.services.implementation.UserServiceImpl;
 import jakarta.validation.Valid;
@@ -29,7 +30,7 @@ public class LoginController {
     }
 
     @PostMapping
-    public ModelAndView login(@Valid @ModelAttribute(RequestAttributesNames.USER) User user, BindingResult bindingResult, Model model) {
+    public ModelAndView login(@Valid @ModelAttribute(RequestAttributesNames.USER) User user, BindingResult bindingResult, Model model) throws UnableToExecuteQueryException {
         return userService.getUser(user.getEmail(), user.getPassword(), bindingResult, model);
     }
 

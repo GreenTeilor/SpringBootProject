@@ -1,6 +1,6 @@
 package by.teachmeskills.springbootproject.repositories;
 
-import by.teachmeskills.springbootproject.exceptions.BadConnectionException;
+import by.teachmeskills.springbootproject.exceptions.UnableToExecuteQueryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,7 +66,7 @@ public class ConnectionPool {
 
     }
 
-    private void openAdditionalConnection() throws BadConnectionException {
+    private void openAdditionalConnection() throws UnableToExecuteQueryException {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             pool.add(DriverManager.getConnection(url, login, pass));
@@ -74,7 +74,7 @@ public class ConnectionPool {
                 currentConnectionNumber++;
             }
         } catch (SQLException | ClassNotFoundException e) {
-            throw new BadConnectionException("New connection wasn't added in the connection pool");
+            throw new UnableToExecuteQueryException("New connection wasn't added in the connection pool");
         }
     }
 
@@ -85,7 +85,7 @@ public class ConnectionPool {
                 openAdditionalConnection();
             }
             connection = pool.take();
-        } catch (InterruptedException | BadConnectionException e) {
+        } catch (InterruptedException | UnableToExecuteQueryException e) {
             logger.error(e.getMessage());
         }
         return connection;
