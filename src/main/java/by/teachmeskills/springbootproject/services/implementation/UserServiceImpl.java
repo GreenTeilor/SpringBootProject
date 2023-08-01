@@ -6,6 +6,7 @@ import by.teachmeskills.springbootproject.entities.Order;
 import by.teachmeskills.springbootproject.entities.Product;
 import by.teachmeskills.springbootproject.entities.Statistics;
 import by.teachmeskills.springbootproject.entities.User;
+import by.teachmeskills.springbootproject.exceptions.AuthorizationException;
 import by.teachmeskills.springbootproject.exceptions.UnableToExecuteQueryException;
 import by.teachmeskills.springbootproject.exceptions.UserAlreadyExistsException;
 import by.teachmeskills.springbootproject.repositories.ProductRepository;
@@ -40,18 +41,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ModelAndView getUser(String email, String password, BindingResult bindingResult, Model model) throws UnableToExecuteQueryException {
+    public ModelAndView getUser(String email, String password, BindingResult bindingResult, Model model) throws UnableToExecuteQueryException, AuthorizationException {
         ModelAndView modelAndView = new ModelAndView(PagesPaths.LOGIN_PAGE);
+        if (!bindingResult.hasFieldErrors(RequestAttributesNames.EMAIL) && !bindingResult.hasFieldErrors(RequestAttributesNames.PASSWORD)) {
+            User authenticatedUser = userRepository.getUser(email, password);
+            if (authenticatedUser != null) {
+                model.addAttribute(RequestAttributesNames.USER, authenticatedUser);
+                return new ModelAndView("redirect:" + PagesPaths.HOME_PAGE);
+            }
+            throw new AuthorizationException("Неверный логин или пароль");
+        }
         ErrorPopulatorUtils.populateError(RequestAttributesNames.EMAIL, modelAndView, bindingResult);
         ErrorPopulatorUtils.populateError(RequestAttributesNames.PASSWORD, modelAndView, bindingResult);
-        User authenticatedUser = userRepository.getUser(email, password);
-        if (authenticatedUser != null) {
-            model.addAttribute(RequestAttributesNames.USER, authenticatedUser);
-            return new ModelAndView("redirect:" + PagesPaths.HOME_PAGE);
-        } else {
-            modelAndView.addObject(RequestAttributesNames.STATUS, "Неверный логин или пароль");
-            return modelAndView;
-        }
+        return modelAndView;
     }
 
     @Override

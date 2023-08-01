@@ -24,7 +24,7 @@ public class GlobalControllerExceptionHandler {
     }
 
     @ExceptionHandler(UserAlreadyExistsException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.OK)
     public ModelAndView handleUserAlreadyExistsException(UserAlreadyExistsException e) {
         ModelAndView modelAndView = new ModelAndView(PagesPaths.REGISTER_PAGE);
         modelAndView.addObject(RequestAttributesNames.STATUS, e.getMessage());
@@ -32,5 +32,12 @@ public class GlobalControllerExceptionHandler {
         return modelAndView;
     }
 
+    @ExceptionHandler(AuthorizationException.class)
+    @ResponseStatus(HttpStatus.OK)
+    public ModelAndView handleAuthorizationException(AuthorizationException e) {
+        ModelAndView modelAndView = new ModelAndView(PagesPaths.LOGIN_PAGE);
+        modelAndView.addObject(RequestAttributesNames.STATUS, e.getMessage());
+        return modelAndView;
+    }
 }
 
