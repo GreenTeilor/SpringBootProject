@@ -6,7 +6,7 @@ import by.teachmeskills.springbootproject.constants.SessionAttributesNames;
 import by.teachmeskills.springbootproject.entities.Cart;
 import by.teachmeskills.springbootproject.exceptions.EntityOperationException;
 import by.teachmeskills.springbootproject.services.ProductService;
-import by.teachmeskills.springbootproject.services.implementation.ProductServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -18,9 +18,10 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("cart")
 @SessionAttributes(SessionAttributesNames.CART)
+@RequiredArgsConstructor
 public class CartController {
 
-    private static final ProductService service = new ProductServiceImpl();
+    private final ProductService service;
 
     @GetMapping
     public ModelAndView openCartPage(@ModelAttribute(SessionAttributesNames.CART) Cart cart) {

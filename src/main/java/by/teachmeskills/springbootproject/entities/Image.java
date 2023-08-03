@@ -1,11 +1,11 @@
 package by.teachmeskills.springbootproject.entities;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
+@Setter
 @SuperBuilder
 public class Image extends BaseEntity{
    private String imagePath;

@@ -11,10 +11,9 @@ import by.teachmeskills.springbootproject.exceptions.EntityOperationException;
 import by.teachmeskills.springbootproject.exceptions.UserAlreadyExistsException;
 import by.teachmeskills.springbootproject.repositories.ProductRepository;
 import by.teachmeskills.springbootproject.repositories.UserRepository;
-import by.teachmeskills.springbootproject.repositories.implementation.ProductRepositoryImpl;
-import by.teachmeskills.springbootproject.repositories.implementation.UserRepositoryImpl;
 import by.teachmeskills.springbootproject.services.UserService;
 import by.teachmeskills.springbootproject.utils.ErrorPopulatorUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,9 +25,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    UserRepository userRepository = new UserRepositoryImpl();
-    ProductRepository productRepository = new ProductRepositoryImpl();
+    private final UserRepository userRepository;
+    private final ProductRepository productRepository;
 
     @Override
     public User getUserByEmail(String email) throws EntityOperationException {

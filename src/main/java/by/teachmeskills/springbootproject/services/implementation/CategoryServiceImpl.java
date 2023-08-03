@@ -6,12 +6,14 @@ import by.teachmeskills.springbootproject.entities.Category;
 import by.teachmeskills.springbootproject.exceptions.EntityOperationException;
 import by.teachmeskills.springbootproject.repositories.implementation.CategoryRepositoryImpl;
 import by.teachmeskills.springbootproject.services.CategoryService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 @Service
+@RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
-    private final CategoryRepositoryImpl categoryRepository = new CategoryRepositoryImpl();
+    private final CategoryRepositoryImpl categoryRepository;
 
     @Override
     public ModelAndView create(Category category) throws EntityOperationException {

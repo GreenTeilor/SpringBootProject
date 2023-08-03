@@ -6,9 +6,9 @@ import by.teachmeskills.springbootproject.entities.User;
 import by.teachmeskills.springbootproject.exceptions.EntityOperationException;
 import by.teachmeskills.springbootproject.exceptions.UserAlreadyExistsException;
 import by.teachmeskills.springbootproject.services.UserService;
-import by.teachmeskills.springbootproject.services.implementation.UserServiceImpl;
 import by.teachmeskills.springbootproject.utils.ErrorPopulatorUtils;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,9 +19,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("register")
+@RequiredArgsConstructor
 public class RegisterController {
 
-    private static final UserService service = new UserServiceImpl();
+    private final UserService service;
 
     @GetMapping
     public ModelAndView openRegisterPage() {

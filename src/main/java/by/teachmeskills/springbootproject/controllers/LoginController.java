@@ -7,8 +7,8 @@ import by.teachmeskills.springbootproject.entities.User;
 import by.teachmeskills.springbootproject.exceptions.AuthorizationException;
 import by.teachmeskills.springbootproject.exceptions.EntityOperationException;
 import by.teachmeskills.springbootproject.services.UserService;
-import by.teachmeskills.springbootproject.services.implementation.UserServiceImpl;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,8 +22,9 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("login")
 @SessionAttributes(SessionAttributesNames.USER)
+@RequiredArgsConstructor
 public class LoginController {
-    private static final UserService userService = new UserServiceImpl();
+    private final UserService userService;
 
     @GetMapping
     public ModelAndView openLoginPage() {

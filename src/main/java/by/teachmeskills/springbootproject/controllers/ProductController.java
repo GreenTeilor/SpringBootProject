@@ -2,7 +2,7 @@ package by.teachmeskills.springbootproject.controllers;
 
 import by.teachmeskills.springbootproject.exceptions.EntityOperationException;
 import by.teachmeskills.springbootproject.services.ProductService;
-import by.teachmeskills.springbootproject.services.implementation.ProductServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,8 +11,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("products")
+@RequiredArgsConstructor
 public class ProductController {
-    private static final ProductService service = new ProductServiceImpl();
+    private final ProductService service;
 
     @GetMapping("{id}")
     public ModelAndView openProductPage(@PathVariable int id) throws EntityOperationException {

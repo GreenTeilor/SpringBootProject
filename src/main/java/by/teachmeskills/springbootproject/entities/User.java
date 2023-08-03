@@ -1,22 +1,21 @@
 package by.teachmeskills.springbootproject.entities;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
+@Setter
 @SuperBuilder
 @NoArgsConstructor
 public class User extends BaseEntity {
@@ -39,7 +38,7 @@ public class User extends BaseEntity {
     private LocalDate registrationDate;
     private BigDecimal balance;
 
-    @Min(value = 3, message = "Минимум 3 символа")
+    @Size(min = 3, message = "Минимум 3 символа")
     private String password;
 
     @Size(min = 10, max = 90, message = "Длина адреса должна быть в пределах от 10 до 90 символов")

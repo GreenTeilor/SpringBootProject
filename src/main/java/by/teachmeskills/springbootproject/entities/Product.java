@@ -2,14 +2,14 @@ package by.teachmeskills.springbootproject.entities;
 
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
+@Setter
 @SuperBuilder
 public class Product extends BaseEntity{
     @Size(min = 1, max = 50, message = "Пустое или длиннее 50 символов")

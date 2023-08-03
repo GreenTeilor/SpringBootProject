@@ -8,18 +8,18 @@ import by.teachmeskills.springbootproject.exceptions.EntityOperationException;
 import by.teachmeskills.springbootproject.exceptions.UserAlreadyExistsException;
 import by.teachmeskills.springbootproject.repositories.CategoryRepository;
 import by.teachmeskills.springbootproject.repositories.ProductRepository;
-import by.teachmeskills.springbootproject.repositories.implementation.CategoryRepositoryImpl;
-import by.teachmeskills.springbootproject.repositories.implementation.ProductRepositoryImpl;
 import by.teachmeskills.springbootproject.services.ProductService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
-    private final ProductRepository productRepository = new ProductRepositoryImpl();
-    private final CategoryRepository categoryRepository = new CategoryRepositoryImpl();
+    private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
     @Override
     public ModelAndView getCategoryProducts(String category) throws EntityOperationException {
