@@ -1,14 +1,14 @@
 package by.teachmeskills.springbootproject.repositories;
 
 import by.teachmeskills.springbootproject.entities.User;
-import by.teachmeskills.springbootproject.exceptions.UnableToExecuteQueryException;
+import by.teachmeskills.springbootproject.exceptions.EntityOperationException;
 
 public interface UserRepository extends BaseRepository<User> {
-    User getUserByEmail(String email) throws UnableToExecuteQueryException;
+    User getUserByEmail(String email) throws EntityOperationException;
 
-    User getUserById(int id) throws UnableToExecuteQueryException;
+    User getUserById(int id) throws EntityOperationException;
 
-    User getUser(String email, String password) throws UnableToExecuteQueryException;
+    User getUser(String email, String password) throws EntityOperationException;
 
-    void updateAddressAndPhoneNumber(String address, String phoneNumber, String email) throws UnableToExecuteQueryException;
+    void updateAddressAndPhoneNumber(String address, String phoneNumber, String email) throws EntityOperationException;
 }

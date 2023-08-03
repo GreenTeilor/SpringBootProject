@@ -2,7 +2,7 @@ package by.teachmeskills.springbootproject.controllers;
 
 import by.teachmeskills.springbootproject.constants.SessionAttributesNames;
 import by.teachmeskills.springbootproject.entities.User;
-import by.teachmeskills.springbootproject.exceptions.UnableToExecuteQueryException;
+import by.teachmeskills.springbootproject.exceptions.EntityOperationException;
 import by.teachmeskills.springbootproject.services.UserService;
 import by.teachmeskills.springbootproject.services.implementation.UserServiceImpl;
 import jakarta.validation.Valid;
@@ -22,12 +22,12 @@ public class ProfileController {
     private static final UserService userService = new UserServiceImpl();
 
     @GetMapping
-    public ModelAndView openProfilePage(@SessionAttribute(SessionAttributesNames.USER) User user) throws UnableToExecuteQueryException {
+    public ModelAndView openProfilePage(@SessionAttribute(SessionAttributesNames.USER) User user) throws EntityOperationException {
         return userService.getUserOrders(user);
     }
 
     @PostMapping
-    public ModelAndView addAddressAndPhoneNumberInfo(@Valid @ModelAttribute(SessionAttributesNames.USER) User user, BindingResult bindingResult, @SessionAttribute(SessionAttributesNames.USER) User userInSession) throws UnableToExecuteQueryException {
+    public ModelAndView addAddressAndPhoneNumberInfo(@Valid @ModelAttribute(SessionAttributesNames.USER) User user, BindingResult bindingResult, @SessionAttribute(SessionAttributesNames.USER) User userInSession) throws EntityOperationException {
         return userService.addAddressAndPhoneNumberInfo(user.getAddress(), user.getPhoneNumber(), userInSession, bindingResult);
     }
 

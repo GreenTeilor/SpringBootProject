@@ -7,7 +7,7 @@ import by.teachmeskills.springbootproject.entities.Product;
 import by.teachmeskills.springbootproject.entities.Statistics;
 import by.teachmeskills.springbootproject.entities.User;
 import by.teachmeskills.springbootproject.exceptions.AuthorizationException;
-import by.teachmeskills.springbootproject.exceptions.UnableToExecuteQueryException;
+import by.teachmeskills.springbootproject.exceptions.EntityOperationException;
 import by.teachmeskills.springbootproject.exceptions.UserAlreadyExistsException;
 import by.teachmeskills.springbootproject.repositories.ProductRepository;
 import by.teachmeskills.springbootproject.repositories.UserRepository;
@@ -31,17 +31,17 @@ public class UserServiceImpl implements UserService {
     ProductRepository productRepository = new ProductRepositoryImpl();
 
     @Override
-    public User getUserByEmail(String email) throws UnableToExecuteQueryException {
+    public User getUserByEmail(String email) throws EntityOperationException {
         return userRepository.getUserByEmail(email);
     }
 
     @Override
-    public User getUserById(int id) throws UnableToExecuteQueryException {
+    public User getUserById(int id) throws EntityOperationException {
         return userRepository.getUserById(id);
     }
 
     @Override
-    public ModelAndView getUser(String email, String password, BindingResult bindingResult, Model model) throws UnableToExecuteQueryException, AuthorizationException {
+    public ModelAndView getUser(String email, String password, BindingResult bindingResult, Model model) throws EntityOperationException, AuthorizationException {
         ModelAndView modelAndView = new ModelAndView(PagesPaths.LOGIN_PAGE);
         if (!bindingResult.hasFieldErrors(RequestAttributesNames.EMAIL) && !bindingResult.hasFieldErrors(RequestAttributesNames.PASSWORD)) {
             User authenticatedUser = userRepository.getUser(email, password);
@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateAddressAndPhoneNumber(String address, String phoneNumber, String email) throws UnableToExecuteQueryException {
+    public void updateAddressAndPhoneNumber(String address, String phoneNumber, String email) throws EntityOperationException {
         userRepository.updateAddressAndPhoneNumber(address, phoneNumber, email);
     }
 
@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ModelAndView getUserOrders(User user) throws UnableToExecuteQueryException {
+    public ModelAndView getUserOrders(User user) throws EntityOperationException {
         Statistics statistics = Statistics.builder().id(1).userId(1).daysRegistered(10).orderCount(2).booksCount(5).favoriteGenre("Фантастика").build();
         List<Product> list1 = new ArrayList<>(List.of(productRepository.getProductById(1), productRepository.getProductById(2), productRepository.getProductById(3)));
         List<Product> list2 = new ArrayList<>(List.of(productRepository.getProductById(2), productRepository.getProductById(1)));
@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ModelAndView addAddressAndPhoneNumberInfo(String address, String phoneNumber, User user, BindingResult bindingResult) throws UnableToExecuteQueryException {
+    public ModelAndView addAddressAndPhoneNumberInfo(String address, String phoneNumber, User user, BindingResult bindingResult) throws EntityOperationException {
         Statistics statistics = Statistics.builder().id(1).userId(1).daysRegistered(10).orderCount(2).booksCount(5).favoriteGenre("Фантастика").build();
         List<Product> list1 = new ArrayList<>(List.of(productRepository.getProductById(1), productRepository.getProductById(2), productRepository.getProductById(3)));
         List<Product> list2 = new ArrayList<>(List.of(productRepository.getProductById(2), productRepository.getProductById(1)));
@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ModelAndView create(User user) throws UnableToExecuteQueryException, UserAlreadyExistsException {
+    public ModelAndView create(User user) throws EntityOperationException, UserAlreadyExistsException {
         ModelAndView modelAndView = new ModelAndView(PagesPaths.REGISTER_PAGE);
         user.setBalance(BigDecimal.valueOf(0.0));
         user.setRegistrationDate(LocalDate.now());
@@ -109,19 +109,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ModelAndView read() throws UnableToExecuteQueryException {
+    public ModelAndView read() throws EntityOperationException {
         ModelAndView modelAndView = new ModelAndView(PagesPaths.HOME_PAGE);
         modelAndView.addObject(RequestAttributesNames.USER, userRepository.read());
         return modelAndView;
     }
 
     @Override
-    public User update(User user) throws UnableToExecuteQueryException {
+    public User update(User user) throws EntityOperationException {
         return userRepository.update(user);
     }
 
     @Override
-    public void delete(int id) throws UnableToExecuteQueryException {
+    public void delete(int id) throws EntityOperationException {
         userRepository.delete(id);
     }
 }

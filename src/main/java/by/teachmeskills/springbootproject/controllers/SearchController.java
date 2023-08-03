@@ -1,6 +1,6 @@
 package by.teachmeskills.springbootproject.controllers;
 
-import by.teachmeskills.springbootproject.exceptions.UnableToExecuteQueryException;
+import by.teachmeskills.springbootproject.exceptions.EntityOperationException;
 import by.teachmeskills.springbootproject.services.ProductService;
 import by.teachmeskills.springbootproject.services.implementation.ProductServiceImpl;
 import org.springframework.stereotype.Controller;
@@ -15,12 +15,12 @@ public class SearchController {
     private static final ProductService productService = new ProductServiceImpl();
 
     @GetMapping
-    public ModelAndView openSearchPage() throws UnableToExecuteQueryException {
+    public ModelAndView openSearchPage() throws EntityOperationException {
         return productService.read();
     }
 
     @PostMapping
-    public ModelAndView search(String searchCriteria) throws UnableToExecuteQueryException {
+    public ModelAndView search(String searchCriteria) throws EntityOperationException {
         return productService.findProducts(searchCriteria);
     }
 }

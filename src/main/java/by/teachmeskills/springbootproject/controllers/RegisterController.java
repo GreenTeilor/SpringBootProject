@@ -3,7 +3,7 @@ package by.teachmeskills.springbootproject.controllers;
 import by.teachmeskills.springbootproject.constants.PagesPaths;
 import by.teachmeskills.springbootproject.constants.RequestAttributesNames;
 import by.teachmeskills.springbootproject.entities.User;
-import by.teachmeskills.springbootproject.exceptions.UnableToExecuteQueryException;
+import by.teachmeskills.springbootproject.exceptions.EntityOperationException;
 import by.teachmeskills.springbootproject.exceptions.UserAlreadyExistsException;
 import by.teachmeskills.springbootproject.services.UserService;
 import by.teachmeskills.springbootproject.services.implementation.UserServiceImpl;
@@ -29,7 +29,7 @@ public class RegisterController {
     }
 
     @PostMapping
-    public ModelAndView registerUser(@Valid @ModelAttribute(RequestAttributesNames.USER) User user, BindingResult bindingResult) throws UnableToExecuteQueryException, UserAlreadyExistsException {
+    public ModelAndView registerUser(@Valid @ModelAttribute(RequestAttributesNames.USER) User user, BindingResult bindingResult) throws EntityOperationException, UserAlreadyExistsException {
         if (bindingResult.hasErrors()) {
             ModelAndView modelAndView = new ModelAndView(PagesPaths.REGISTER_PAGE);
             ErrorPopulatorUtils.populateError(RequestAttributesNames.NAME, modelAndView, bindingResult);

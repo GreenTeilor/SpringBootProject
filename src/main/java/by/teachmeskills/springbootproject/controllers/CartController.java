@@ -4,7 +4,7 @@ import by.teachmeskills.springbootproject.constants.PagesPaths;
 import by.teachmeskills.springbootproject.constants.RequestAttributesNames;
 import by.teachmeskills.springbootproject.constants.SessionAttributesNames;
 import by.teachmeskills.springbootproject.entities.Cart;
-import by.teachmeskills.springbootproject.exceptions.UnableToExecuteQueryException;
+import by.teachmeskills.springbootproject.exceptions.EntityOperationException;
 import by.teachmeskills.springbootproject.services.ProductService;
 import by.teachmeskills.springbootproject.services.implementation.ProductServiceImpl;
 import org.springframework.stereotype.Controller;
@@ -30,7 +30,7 @@ public class CartController {
     }
 
     @GetMapping("addProduct/{id}")
-    public ModelAndView addProduct(@PathVariable int id, @ModelAttribute(SessionAttributesNames.CART) Cart cart) throws UnableToExecuteQueryException {
+    public ModelAndView addProduct(@PathVariable int id, @ModelAttribute(SessionAttributesNames.CART) Cart cart) throws EntityOperationException {
         return service.addProductToCart(id, cart);
     }
 

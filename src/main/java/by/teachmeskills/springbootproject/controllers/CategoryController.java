@@ -1,7 +1,7 @@
 package by.teachmeskills.springbootproject.controllers;
 
 import by.teachmeskills.springbootproject.constants.RequestAttributesNames;
-import by.teachmeskills.springbootproject.exceptions.UnableToExecuteQueryException;
+import by.teachmeskills.springbootproject.exceptions.EntityOperationException;
 import by.teachmeskills.springbootproject.services.ProductService;
 import by.teachmeskills.springbootproject.services.implementation.ProductServiceImpl;
 import org.springframework.stereotype.Controller;
@@ -16,7 +16,7 @@ public class CategoryController {
     private static final ProductService service = new ProductServiceImpl();
 
     @GetMapping("{name}")
-    public ModelAndView openCategory(@PathVariable String name) throws UnableToExecuteQueryException {
+    public ModelAndView openCategory(@PathVariable String name) throws EntityOperationException {
         ModelAndView modelAndView = service.getCategoryProducts(name);
         modelAndView.addObject(RequestAttributesNames.CATEGORY_NAME, name);
         return modelAndView;
