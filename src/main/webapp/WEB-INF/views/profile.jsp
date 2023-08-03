@@ -57,6 +57,7 @@
                                             <div>
                                                 <input class="info-input" type="text" name="address" id="address" placeholder="Адрес">
                                             </div>
+                                            <div class="errorInput">${addressError}</div>
                                         </div>
                                         <div class="media">
                                             <label for="phoneNumber">Номер телефона</label>
@@ -64,6 +65,7 @@
                                                 <input class="info-input" type="tel" name="phoneNumber" id="phoneNumber"
                                                        placeholder="Номер телефона">
                                             </div>
+                                            <div class="errorInput">${phoneNumberError}</div>
                                         </div>
                                         <button class="input-button btn btn-primary" type="submit">Отправить</button>
                                     </form>
@@ -84,25 +86,25 @@
             <div class="row">
                 <div class="col-md-6 col-lg-3">
                     <div class="count-data text-center">
-                        <h6 class="count h2" data-to="500" data-speed="500">${statistics.daysRegistered()} дней</h6>
+                        <h6 class="count h2" data-to="500" data-speed="500">${statistics.getDaysRegistered()} дней</h6>
                         <p class="m-0px font-w-600">С нами</p>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-3">
                     <div class="count-data text-center">
-                        <h6 class="count h2" data-to="150" data-speed="150">${statistics.orderCount()}</h6>
+                        <h6 class="count h2" data-to="150" data-speed="150">${statistics.getOrderCount()}</h6>
                         <p class="m-0px font-w-600">Сделано заказов</p>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-3">
                     <div class="count-data text-center">
-                        <h6 class="count h2" data-to="850" data-speed="850">${statistics.booksCount()}</h6>
+                        <h6 class="count h2" data-to="850" data-speed="850">${statistics.getBooksCount()}</h6>
                         <p class="m-0px font-w-600">Куплено книг</p>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-3">
                     <div class="count-data text-center">
-                        <h6 class="count h2" data-to="190" data-speed="190">${statistics.favoriteGenre()}</h6>
+                        <h6 class="count h2" data-to="190" data-speed="190">${statistics.getFavoriteGenre()}</h6>
                         <p class="m-0px font-w-600">Любимый жанр</p>
                     </div>
                 </div>

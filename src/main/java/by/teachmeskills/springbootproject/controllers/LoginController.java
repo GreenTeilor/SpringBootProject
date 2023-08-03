@@ -4,10 +4,14 @@ import by.teachmeskills.springbootproject.constants.PagesPaths;
 import by.teachmeskills.springbootproject.constants.RequestAttributesNames;
 import by.teachmeskills.springbootproject.constants.SessionAttributesNames;
 import by.teachmeskills.springbootproject.entities.User;
+import by.teachmeskills.springbootproject.exceptions.AuthorizationException;
+import by.teachmeskills.springbootproject.exceptions.EntityOperationException;
 import by.teachmeskills.springbootproject.services.UserService;
 import by.teachmeskills.springbootproject.services.implementation.UserServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,8 +31,8 @@ public class LoginController {
     }
 
     @PostMapping
-    public ModelAndView login(@ModelAttribute(RequestAttributesNames.USER) User user, Model model) {
-        return userService.getUser(user.getEmail(), user.getPassword(), model);
+    public ModelAndView login(@Valid @ModelAttribute(RequestAttributesNames.USER) User user, BindingResult bindingResult, Model model) throws EntityOperationException, AuthorizationException {
+        return userService.getUser(user.getEmail(), user.getPassword(), bindingResult, model);
     }
 
     @ModelAttribute(RequestAttributesNames.USER)

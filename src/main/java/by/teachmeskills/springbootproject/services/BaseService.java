@@ -1,15 +1,16 @@
 package by.teachmeskills.springbootproject.services;
 
 import by.teachmeskills.springbootproject.entities.BaseEntity;
-import by.teachmeskills.springbootproject.exceptions.BadConnectionException;
+import by.teachmeskills.springbootproject.exceptions.EntityOperationException;
+import by.teachmeskills.springbootproject.exceptions.UserAlreadyExistsException;
 import org.springframework.web.servlet.ModelAndView;
 
 public interface BaseService<T extends BaseEntity> {
-    ModelAndView create(T entity);
+    ModelAndView create(T entity) throws EntityOperationException, UserAlreadyExistsException;
 
-    ModelAndView read();
+    ModelAndView read() throws EntityOperationException;
 
-    T update(T entity) throws BadConnectionException;
+    T update(T entity) throws EntityOperationException;
 
-    void delete(int id) throws BadConnectionException;
+    void delete(int id) throws EntityOperationException;
 }

@@ -19,9 +19,11 @@
         <div class="form-field d-flex align-items-center">
             <input type="email" name="email" id="email" placeholder="Email">
         </div>
+        <div class="errorInput">${emailError}</div>
         <div class="form-field d-flex align-items-center">
             <input type="password" name="password" id="password" placeholder="Пароль">
         </div>
+        <div class="errorInput">${passwordError}</div>
         <button type="submit" class="btn mt-3">Войти</button>
     </form>
     <div class="text-center fs-6">

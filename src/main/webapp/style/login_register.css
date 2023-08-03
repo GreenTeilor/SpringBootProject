@@ -56,9 +56,13 @@ body {
 
 .wrapper .form-field {
     padding-left: 10px;
-    margin-bottom: 20px;
     border-radius: 20px;
     box-shadow: inset 8px 8px 8px #cbced1, inset -8px -8px 8px #fff;
+}
+
+.wrapper .errorInput {
+    margin-bottom: 20px;
+    padding-left: 10px;
 }
 
 .wrapper .form-field .fas {
@@ -100,6 +104,10 @@ body {
 .error {
     border-radius: 20px;
     box-shadow: inset 8px 8px 8px #ff9696, inset -8px -8px 8px #ff9696;
+}
+
+.errorInput {
+    color: red;
 }
 
 @media (max-width: 380px) {
