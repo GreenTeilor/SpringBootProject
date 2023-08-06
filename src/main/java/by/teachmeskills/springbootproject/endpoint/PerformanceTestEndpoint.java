@@ -1,6 +1,5 @@
 package by.teachmeskills.springbootproject.endpoint;
 
-import by.teachmeskills.springbootproject.exceptions.EntityOperationException;
 import by.teachmeskills.springbootproject.repositories.CategoryRepository;
 import by.teachmeskills.springbootproject.repositories.ProductRepository;
 import by.teachmeskills.springbootproject.repositories.UserRepository;
@@ -22,7 +21,7 @@ public class PerformanceTestEndpoint {
     private final ProductRepository productRepository;
 
     @ReadOperation
-    public ModelAndView getResults() throws EntityOperationException {
+    public ModelAndView getResults() {
         ModelAndView modelAndView = new ModelAndView("performanceInfo");
         ModelMap modelMap = new ModelMap();
         long lastResult;

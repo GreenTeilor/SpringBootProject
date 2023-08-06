@@ -1,7 +1,6 @@
 package by.teachmeskills.springbootproject.controllers;
 
 import by.teachmeskills.springbootproject.constants.RequestAttributesNames;
-import by.teachmeskills.springbootproject.exceptions.EntityOperationException;
 import by.teachmeskills.springbootproject.services.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -17,7 +16,7 @@ public class CategoryController {
     private final ProductService service;
 
     @GetMapping("{name}")
-    public ModelAndView openCategory(@PathVariable String name) throws EntityOperationException {
+    public ModelAndView openCategory(@PathVariable String name) {
         ModelAndView modelAndView = service.getCategoryProducts(name);
         modelAndView.addObject(RequestAttributesNames.CATEGORY_NAME, name);
         return modelAndView;

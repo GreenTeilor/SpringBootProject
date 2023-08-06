@@ -1,7 +1,7 @@
 package by.teachmeskills.springbootproject.repositories.implementation;
 
-import by.teachmeskills.springbootproject.entities.Category;
-import by.teachmeskills.springbootproject.repositories.CategoryRepository;
+import by.teachmeskills.springbootproject.entities.Order;
+import by.teachmeskills.springbootproject.repositories.OrderRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -12,35 +12,35 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class CategoryRepositoryImpl implements CategoryRepository {
-    private final static String GET_CATEGORIES_QUERY = "select c from Category c";
+public class OrderRepositoryImpl implements OrderRepository {
+    private final static String GET_ALL_ORDERS_QUERY = "select o from Order o";
 
     @PersistenceContext
     private final EntityManager manager;
 
     @Override
-    public Category create(Category category) {
+    public Order create(Order order) {
         Session session = manager.unwrap(Session.class);
-        session.persist(category);
-        return category;
+        session.persist(order);
+        return order;
     }
 
     @Override
-    public List<Category> read() {
+    public List<Order> read() {
         Session session = manager.unwrap(Session.class);
-        return session.createQuery(GET_CATEGORIES_QUERY, Category.class).getResultList();
+        return session.createQuery(GET_ALL_ORDERS_QUERY, Order.class).getResultList();
     }
 
     @Override
-    public Category update(Category category) {
+    public Order update(Order order) {
         Session session = manager.unwrap(Session.class);
-        return session.merge(category);
+        return session.merge(order);
     }
 
     @Override
     public void delete(int id) {
         Session session = manager.unwrap(Session.class);
-        Category category = session.get(Category.class, id);
-        session.remove(category);
+        Order order = session.get(Order.class, id);
+        session.remove(order);
     }
 }

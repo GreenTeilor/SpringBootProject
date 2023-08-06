@@ -1,6 +1,5 @@
 package by.teachmeskills.springbootproject.controllers;
 
-import by.teachmeskills.springbootproject.exceptions.EntityOperationException;
 import by.teachmeskills.springbootproject.services.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -16,12 +15,12 @@ public class SearchController {
     private final ProductService productService;
 
     @GetMapping
-    public ModelAndView openSearchPage() throws EntityOperationException {
+    public ModelAndView openSearchPage() {
         return productService.read();
     }
 
     @PostMapping
-    public ModelAndView search(String searchCriteria) throws EntityOperationException {
+    public ModelAndView search(String searchCriteria) {
         return productService.findProducts(searchCriteria);
     }
 }

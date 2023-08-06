@@ -2,7 +2,6 @@ package by.teachmeskills.springbootproject.controllers;
 
 import by.teachmeskills.springbootproject.constants.SessionAttributesNames;
 import by.teachmeskills.springbootproject.entities.User;
-import by.teachmeskills.springbootproject.exceptions.EntityOperationException;
 import by.teachmeskills.springbootproject.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,12 +22,12 @@ public class ProfileController {
     private final UserService userService;
 
     @GetMapping
-    public ModelAndView openProfilePage(@SessionAttribute(SessionAttributesNames.USER) User user) throws EntityOperationException {
+    public ModelAndView openProfilePage(@SessionAttribute(SessionAttributesNames.USER) User user) {
         return userService.getUserOrders(user);
     }
 
     @PostMapping
-    public ModelAndView addAddressAndPhoneNumberInfo(@Valid @ModelAttribute(SessionAttributesNames.USER) User user, BindingResult bindingResult, @SessionAttribute(SessionAttributesNames.USER) User userInSession) throws EntityOperationException {
+    public ModelAndView addAddressAndPhoneNumberInfo(@Valid @ModelAttribute(SessionAttributesNames.USER) User user, BindingResult bindingResult, @SessionAttribute(SessionAttributesNames.USER) User userInSession) {
         return userService.addAddressAndPhoneNumberInfo(user.getAddress(), user.getPhoneNumber(), userInSession, bindingResult);
     }
 

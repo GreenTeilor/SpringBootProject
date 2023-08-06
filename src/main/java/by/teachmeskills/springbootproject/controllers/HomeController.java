@@ -2,7 +2,6 @@ package by.teachmeskills.springbootproject.controllers;
 
 import by.teachmeskills.springbootproject.constants.RequestAttributesNames;
 import by.teachmeskills.springbootproject.entities.User;
-import by.teachmeskills.springbootproject.exceptions.EntityOperationException;
 import by.teachmeskills.springbootproject.services.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -18,7 +17,7 @@ public class HomeController {
     private final CategoryService categoryService;
 
     @GetMapping
-    public ModelAndView openHomePage(@SessionAttribute(RequestAttributesNames.USER) User user) throws EntityOperationException {
+    public ModelAndView openHomePage(@SessionAttribute(RequestAttributesNames.USER) User user) {
         ModelAndView modelAndView = categoryService.read();
         modelAndView.addObject(RequestAttributesNames.NAME, user.getName());
         modelAndView.addObject(RequestAttributesNames.LAST_NAME, user.getLastName());

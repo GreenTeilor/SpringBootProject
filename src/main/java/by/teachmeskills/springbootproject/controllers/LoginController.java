@@ -5,7 +5,6 @@ import by.teachmeskills.springbootproject.constants.RequestAttributesNames;
 import by.teachmeskills.springbootproject.constants.SessionAttributesNames;
 import by.teachmeskills.springbootproject.entities.User;
 import by.teachmeskills.springbootproject.exceptions.AuthorizationException;
-import by.teachmeskills.springbootproject.exceptions.EntityOperationException;
 import by.teachmeskills.springbootproject.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +31,7 @@ public class LoginController {
     }
 
     @PostMapping
-    public ModelAndView login(@Valid @ModelAttribute(RequestAttributesNames.USER) User user, BindingResult bindingResult, Model model) throws EntityOperationException, AuthorizationException {
+    public ModelAndView login(@Valid @ModelAttribute(RequestAttributesNames.USER) User user, BindingResult bindingResult, Model model) throws AuthorizationException {
         return userService.getUser(user.getEmail(), user.getPassword(), bindingResult, model);
     }
 

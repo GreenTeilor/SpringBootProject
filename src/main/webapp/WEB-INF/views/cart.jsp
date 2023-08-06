@@ -32,6 +32,7 @@
 <p style="text-align: center">
     <a href="<c:url value="/cart/makeOrder"/>" class="btn btn-primary btn-rounded" style="font-size: 1.5rem; margin: 10px">Оформить заказ</a>
     <a href="<c:url value="/cart/clear"/>" class="btn btn-primary btn-rounded" style="font-size: 1.5rem; margin: 10px">Очистить</a>
+    <a style="color: ${color}">${status}</a>
 </p>
 </body>
 </html>
