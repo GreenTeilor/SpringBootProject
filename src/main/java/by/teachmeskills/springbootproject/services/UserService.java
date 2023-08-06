@@ -1,6 +1,7 @@
 package by.teachmeskills.springbootproject.services;
 
 import by.teachmeskills.springbootproject.entities.Cart;
+import by.teachmeskills.springbootproject.entities.Statistics;
 import by.teachmeskills.springbootproject.entities.User;
 import by.teachmeskills.springbootproject.exceptions.AuthorizationException;
 import by.teachmeskills.springbootproject.exceptions.InsufficientFundsException;
@@ -17,6 +18,8 @@ public interface UserService extends BaseService<User>{
     void updateAddressAndPhoneNumber(String address, String phoneNumber, String email);
     ModelAndView getUserOrders(User user);
     ModelAndView addAddressAndPhoneNumberInfo(String address, String phoneNumber, User userInSession, BindingResult bindingResult);
+
+    Statistics getUserStatistics(int id);
 
     ModelAndView makeOrder(User user, Cart cart) throws InsufficientFundsException, UserAlreadyExistsException, NoProductsInOrderException;
 }

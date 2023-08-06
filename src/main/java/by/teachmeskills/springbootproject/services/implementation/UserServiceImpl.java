@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ModelAndView getUserOrders(User user) {
-        Statistics statistics = Statistics.builder().id(1).userId(1).daysRegistered(10).orderCount(2).booksCount(5).favoriteGenre("Фантастика").build();
+        Statistics statistics = getUserStatistics(user.getId());
         List<Order> orders = user.getOrders();
         return makeModelAndView(user, statistics, orders);
     }
@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public ModelAndView addAddressAndPhoneNumberInfo(String address, String phoneNumber, User user, BindingResult bindingResult) {
-        Statistics statistics = Statistics.builder().id(1).userId(1).daysRegistered(10).orderCount(2).booksCount(5).favoriteGenre("Фантастика").build();
+        Statistics statistics = getUserStatistics(user.getId());
         List<Order> orders = user.getOrders();
         if (!bindingResult.hasFieldErrors(RequestAttributesNames.ADDRESS) && !bindingResult.hasFieldErrors(RequestAttributesNames.PHONE_NUMBER)) {
             user.setAddress(address);
@@ -92,6 +92,14 @@ public class UserServiceImpl implements UserService {
         ErrorPopulatorUtils.populateError(RequestAttributesNames.ADDRESS, modelAndView, bindingResult);
         ErrorPopulatorUtils.populateError(RequestAttributesNames.PHONE_NUMBER, modelAndView, bindingResult);
         return modelAndView;
+    }
+
+    @Override
+    public Statistics getUserStatistics(int id) {
+        return Statistics.builder().userId(id).daysRegistered(userRepository.getUserDaysRegistered(id)).
+                orderCount(userRepository.getUserOrdersCount(id)).
+                booksCount(userRepository.getUserPurchasedBooksCount(id)).
+                favoriteGenre(userRepository.getUserFavoriteGenre(id)).build();
     }
 
     @Override
@@ -112,7 +120,7 @@ public class UserServiceImpl implements UserService {
         ModelAndView modelAndView = new ModelAndView(PagesPaths.CART_PAGE);
         modelAndView.addObject(RequestAttributesNames.STATUS, "Заказ оформлен!");
         modelAndView.addObject(RequestAttributesNames.COLOR, "green");
-        return new ModelAndView(PagesPaths.CART_PAGE);
+        return modelAndView;
     }
 
     @Override

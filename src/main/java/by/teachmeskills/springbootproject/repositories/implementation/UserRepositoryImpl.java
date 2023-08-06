@@ -9,6 +9,7 @@ import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.query.MutationQuery;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
@@ -21,6 +22,13 @@ public class UserRepositoryImpl implements UserRepository {
     private final static String SEARCH_USER_QUERY = "select u from User u where u.email=:email and u.password=:password";
     private final static String UPDATE_ADDRESS_AND_PHONE_NUMBER_QUERY = "update User set address=:address, phoneNumber=:phoneNumber where email=:email";
     private final static String GET_ALL_USERS_QUERY = "select u from User u";
+    private final static String GET_USER_FAVORITE_GENRE = "SELECT category FROM (SELECT category, count(*) as count " +
+            "FROM orders_products JOIN products ON productId = products.id " +
+            "JOIN orders ON orderId = orders.id WHERE userId = ? GROUP BY category) as res1 ORDER BY count DESC LIMIT 1";
+
+    private final static String GET_USER_DAYS_REGISTERED = "SELECT datediff(CURRENT_TIMESTAMP, registrationDate) as result FROM users WHERE id = ?";
+    private final static String GET_USER_PURCHASED_BOOKS_COUNT = "SELECT count(*) FROM orders_products JOIN orders ON orderId = orders.id WHERE userId = ?";
+    private final static String GET_USER_ORDERS_COUNT = "SELECT count(*) FROM orders WHERE userId = ?";
 
     @PersistenceContext
     private final EntityManager manager;
@@ -56,6 +64,39 @@ public class UserRepositoryImpl implements UserRepository {
         query.setParameter("phoneNumber", phoneNumber);
         query.setParameter("email", email);
         query.executeUpdate();
+    }
+
+    @Override
+    public String getUserFavoriteGenre(int id) {
+        Session session = manager.unwrap(Session.class);
+        NativeQuery<String> query = session.createNativeQuery(GET_USER_FAVORITE_GENRE, String.class);
+        query.setParameter(1, id);
+        String result = query.getSingleResultOrNull();
+        return result != null ? result : "Не определен";
+    }
+
+    @Override
+    public int getUserDaysRegistered(int id) {
+        Session session = manager.unwrap(Session.class);
+        NativeQuery<Integer> query = session.createNativeQuery(GET_USER_DAYS_REGISTERED, Integer.class);
+        query.setParameter(1, id);
+        return query.getSingleResult();
+    }
+
+    @Override
+    public int getUserPurchasedBooksCount(int id) {
+        Session session = manager.unwrap(Session.class);
+        NativeQuery<Integer> query = session.createNativeQuery(GET_USER_PURCHASED_BOOKS_COUNT, Integer.class);
+        query.setParameter(1, id);
+        return query.getSingleResult();
+    }
+
+    @Override
+    public int getUserOrdersCount(int id) {
+        Session session = manager.unwrap(Session.class);
+        NativeQuery<Integer> query = session.createNativeQuery(GET_USER_ORDERS_COUNT, Integer.class);
+        query.setParameter(1, id);
+        return query.getSingleResult();
     }
 
     @Override

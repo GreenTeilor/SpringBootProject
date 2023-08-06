@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Getter
 @Setter
-public class Statistics extends BaseEntity{
+public class Statistics {
     @NotNull(message = "Не введено")
     int userId;
 

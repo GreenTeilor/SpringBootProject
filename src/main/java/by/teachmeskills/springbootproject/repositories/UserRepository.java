@@ -10,4 +10,9 @@ public interface UserRepository extends BaseRepository<User> {
     User getUser(String email, String password);
 
     void updateAddressAndPhoneNumber(String address, String phoneNumber, String email);
+
+    String getUserFavoriteGenre(int id);
+    int getUserDaysRegistered(int id);
+    int getUserPurchasedBooksCount(int id);
+    int getUserOrdersCount(int id);
 }
