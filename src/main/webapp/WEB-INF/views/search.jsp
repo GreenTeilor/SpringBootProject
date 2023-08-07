@@ -6,13 +6,13 @@
     <title>Поиск</title>
     <jsp:include page="dependencies.jsp"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="style/search.css" rel="stylesheet">
-    <link href="style/common.css" rel="stylesheet">
+    <link href="<c:url value="/style/search.css"/>" rel="stylesheet">
+    <link href="<c:url value="/style/common.css"/>" rel="stylesheet">
 </head>
 <body>
 <jsp:include page="header.jsp"/>
-<form class="well form-inline search-form" method="POST" action="search">
-    <input type="text" name="searchCriteria" id="searchCriteria" class="span3" placeholder="Поиск">
+<form class="well form-inline search-form" method="POST" action="<c:url value="/search"/>">
+    <input type="text" name="keyWords" id="keyWords" class="span3" placeholder="Поиск">
     <button type="submit" class="btn btn-primary">Найти</button>
 </form>
 <div class="row filter-and-content">
@@ -21,7 +21,7 @@
             <div class="items-group main-text">
                 Фильтр
             </div>
-            <form method="POST" action="search">
+            <form method="POST" action="#">
                 <div class="items-group">
                     <div>
                         <label for="categories">Категория</label>
@@ -55,8 +55,8 @@
                 <c:forEach items="${products}" var="product">
                     <div style="display: inline-block;">
                         <div class="card" style="width: 15rem; margin: 20px; background-color: #dee2e6">
-                            <a href="products/${product.getId()}"><img
-                                    src="${product.getImagePath()}"
+                            <a href="<c:url value="/products/${product.getId()}"/>"><img
+                                    src="<c:url value="/${product.getImagePath()}"/>"
                                     class="card-img-top"
                                     style="height: 17rem;"
                                     alt="..."></a>
@@ -64,7 +64,7 @@
                                 <h2 class="card-title" style="font-size: 1rem;">${product.getName()}</h2>
                                 <p class="card-text">Цена: <fmt:formatNumber value="${product.getPrice()}"
                                                                              type="currency"/><br></p>
-                                <a href="products/${product.getId()}" class="btn btn-primary">Посмотреть</a>
+                                <a href="<c:url value="/products/${product.getId()}"/>" class="btn btn-primary">Посмотреть</a>
                             </div>
                         </div>
                     </div>
@@ -72,11 +72,11 @@
             </div>
             <nav class="pagination-nav">
                 <ul class="pagination">
-                    <li class="page-item"><a class="page-link" href="#"><<</a></li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#">>></a></li>
+                    <li class="page-item"><a class="page-link" href="<c:url value="/search/prev"/>"><<</a></li>
+                    <li class="page-item"><a class="page-link" href="<c:url value="/search/1"/>">1</a></li>
+                    <li class="page-item"><a class="page-link" href="<c:url value="/search/2"/>">2</a></li>
+                    <li class="page-item"><a class="page-link" href="<c:url value="/search/3"/>">3</a></li>
+                    <li class="page-item"><a class="page-link" href="<c:url value="/search/next"/>">>></a></li>
                 </ul>
             </nav>
         </div>

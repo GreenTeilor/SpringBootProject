@@ -9,5 +9,5 @@ public interface ProductRepository extends BaseRepository<Product> {
 
     Product getProductById(int id);
 
-    List<Product> findProducts(String keyWords);
+    List<Product> findProducts(String keyWords, int pageNumber);
 }

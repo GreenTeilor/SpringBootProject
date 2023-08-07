@@ -36,12 +36,14 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public List<Product> findProducts(String keyWords) {
+    public List<Product> findProducts(String keyWords, int pageNumber) {
         Session session = manager.unwrap(Session.class);
         Query<Product> query = session.createQuery(SEARCH_PRODUCTS_QUERY, Product.class);
         String searchPattern = "%" + keyWords.trim() + "%";
         query.setParameter("name", searchPattern);
         query.setParameter("description", searchPattern);
+        query.setFirstResult((pageNumber - 1) * 3);
+        query.setMaxResults(3);
         return query.getResultList();
     }
 

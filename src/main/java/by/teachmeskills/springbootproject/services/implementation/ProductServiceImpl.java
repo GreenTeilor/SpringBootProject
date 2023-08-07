@@ -4,6 +4,7 @@ import by.teachmeskills.springbootproject.constants.PagesPaths;
 import by.teachmeskills.springbootproject.constants.RequestAttributesNames;
 import by.teachmeskills.springbootproject.entities.Cart;
 import by.teachmeskills.springbootproject.entities.Product;
+import by.teachmeskills.springbootproject.entities.SearchCriteria;
 import by.teachmeskills.springbootproject.exceptions.UserAlreadyExistsException;
 import by.teachmeskills.springbootproject.repositories.CategoryRepository;
 import by.teachmeskills.springbootproject.repositories.ProductRepository;
@@ -40,9 +41,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ModelAndView findProducts(String keyWords) {
+    public ModelAndView findProducts(SearchCriteria searchCriteria) {
         ModelAndView modelAndView = new ModelAndView(PagesPaths.SEARCH_PAGE);
-        modelAndView.addObject(RequestAttributesNames.PRODUCTS, productRepository.findProducts(keyWords));
+        if (searchCriteria.getPaginationNumber() < 1) {
+            searchCriteria.setPaginationNumber(1);
+        }
+        modelAndView.addObject(RequestAttributesNames.PRODUCTS, productRepository.findProducts(searchCriteria.getKeyWords(), searchCriteria.getPaginationNumber()));
         modelAndView.addObject(RequestAttributesNames.CATEGORIES, categoryRepository.read());
         return modelAndView;
     }

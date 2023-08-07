@@ -13,8 +13,8 @@
 <jsp:include page="header.jsp"/>
 <div class="row">
     <c:forEach items="${categoryProducts}" var="product">
-        <div class="col d-flex justify-content-center">
-            <div class="card" style="width: 22rem; margin: 20px; background-color: #dee2e6">
+        <div class="col">
+            <div class="card mx-auto" style="width: 22rem; margin: 20px; background-color: #dee2e6">
                 <a href="<c:url value="/products/${product.getId()}"/>"><img src="<c:url value="/${product.getImagePath()}"/>" class="card-img-top" style="height: 25rem;" alt="..."></a>
                 <div class="card-body" style="text-align: center">
                     <h2 class="card-title">${product.getName()}</h2>

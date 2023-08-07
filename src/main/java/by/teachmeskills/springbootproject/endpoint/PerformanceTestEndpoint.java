@@ -49,7 +49,7 @@ public class PerformanceTestEndpoint {
 
         watch = new StopWatch();
         watch.start();
-        productRepository.findProducts("Последнее желание");
+        productRepository.findProducts("Последнее желание", 0);
         watch.stop();
         lastResult = watch.getTotalTimeNanos();
         modelMap.addAttribute("productsFindResult", lastResult);
