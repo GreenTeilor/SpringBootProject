@@ -12,21 +12,24 @@
 <c:if test="${sessionScope.user != null}">
     <jsp:include page="info.jsp"/>
 </c:if>
-
-<div class="row">
-    <c:forEach items="${categories}" var="item">
-        <div class="col d-flex justify-content-center">
-            <div class="card" style="width: 22rem; margin: 20px; background-color: #dee2e6 !important; border-radius: 40px;">
-                <a href="categories/${item.getName()}"><img src="${item.getImagePath()}"
-                                                                              class="card-img-top"
-                                                                              style="height: 25rem; border-radius: 40px 40px 0 0;" alt="..."></a>
-                <div class="card-body" style="text-align: center">
-                    <h2 class="card-title">${item.getName()}</h2>
-                    <a href="categories/${item.getName()}" class="btn btn-primary">Перейти</a>
+<div class="container-fluid">
+    <div class="row">
+        <c:forEach items="${categories}" var="item">
+            <div class="col d-flex justify-content-center">
+                <div class="card"
+                     style="width: 22rem; margin: 20px 0 20px 0; background-color: #dee2e6 !important; border-radius: 40px;">
+                    <a href="categories/${item.getName()}"><img src="${item.getImagePath()}"
+                                                                class="card-img-top"
+                                                                style="height: 25rem; border-radius: 40px 40px 0 0;"
+                                                                alt="..."></a>
+                    <div class="card-body" style="text-align: center">
+                        <h2 class="card-title">${item.getName()}</h2>
+                        <a href="categories/${item.getName()}" class="btn btn-primary">Перейти</a>
+                    </div>
                 </div>
             </div>
-        </div>
-    </c:forEach>
+        </c:forEach>
+    </div>
 </div>
 
 </body>

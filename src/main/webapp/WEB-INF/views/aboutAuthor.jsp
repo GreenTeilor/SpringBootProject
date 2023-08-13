@@ -11,20 +11,22 @@
 <div>
     <h1>Обо мне</h1>
 </div>
-<div class="row">
-    <img class="col-sm-4" src="assets/me.jpg">
-    <div class="col-sm-8">
-        <h2>Вводная</h2>
-        <p>
-            Меня зовут lorem ipsum. 20-летний студент БГУИР. Немного программирую.
-        </p>
-        <h3>Продолжение</h3>
-        <p>
-            Кто я такой?
-        </p>
-        <p>
-            Точно, здесь надо написать о себе.
-        </p>
+<div class="container-fluid">
+    <div class="row">
+        <img class="col-sm-4" src="assets/me.jpg">
+        <div class="col-sm-8">
+            <h2>Вводная</h2>
+            <p>
+                Меня зовут lorem ipsum. 20-летний студент БГУИР. Немного программирую.
+            </p>
+            <h3>Продолжение</h3>
+            <p>
+                Кто я такой?
+            </p>
+            <p>
+                Точно, здесь надо написать о себе.
+            </p>
+        </div>
     </div>
 </div>
 </body>

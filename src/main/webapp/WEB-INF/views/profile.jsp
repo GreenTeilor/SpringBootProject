@@ -16,7 +16,7 @@
 <section class="section about-section gray-bg" id="about">
     <div class="container">
         <div class="row align-items-center flex-row-reverse">
-            <div class="col-lg-6">
+            <div class="col-lg-6 justify-content-center d-flex">
                 <div class="about-text go-to">
                     <h3 class="dark-color">Профиль</h3>
                     <div class="row about-list">
@@ -76,7 +76,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-6 justify-content-center d-flex">
                 <div class="about-avatar">
                     <img src="assets/avatar.png" title="avatar" alt="avatar">
                 </div>

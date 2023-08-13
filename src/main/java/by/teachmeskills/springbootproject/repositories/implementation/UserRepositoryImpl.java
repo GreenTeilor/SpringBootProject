@@ -100,10 +100,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User create(User user) throws UserAlreadyExistsException {
-        if (getUserByEmail(user.getEmail()) != null) {
-            throw new UserAlreadyExistsException("Такой пользователь уже существует");
-        }
+    public User create(User user) {
         Session session = manager.unwrap(Session.class);
         user.setPassword(HashUtils.getHash(user.getPassword()));
         session.persist(user);

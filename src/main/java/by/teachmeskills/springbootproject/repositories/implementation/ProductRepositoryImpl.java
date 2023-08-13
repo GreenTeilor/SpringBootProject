@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 public class ProductRepositoryImpl implements ProductRepository {
-    private final static String GET_CATEGORY_PRODUCTS_QUERY = "select p from Product p where p.category=:category";
+    private final static String GET_CATEGORY_PRODUCTS_QUERY = "select p from Product p where p.category.name=:category";
     private final static String GET_PRODUCTS_QUERY = "select p from Product p";
     private final static String SEARCH_PRODUCTS_QUERY = "select p from Product p where p.name like :name or p.description like :description order by p.name asc";
 

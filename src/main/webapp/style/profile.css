@@ -1,5 +1,5 @@
 .section {
-    padding: 100px 0;
+    padding: 30px 0;
     position: relative;
 }
 .gray-bg {
@@ -66,7 +66,6 @@ img {
     right: 11px;
     width: 1px;
     height: 12px;
-    background: #20247b;
     -moz-transform: rotate(15deg);
     -o-transform: rotate(15deg);
     -ms-transform: rotate(15deg);
@@ -147,7 +146,7 @@ mark {
     color: black;
     font-size: 1.5rem;
     font-weight: bold;
-    background-image: url("../assets/wood.jpg");
+    /*background-image: url("../assets/wood.jpg");*/
 }
 
 .history .generalData {

@@ -129,6 +129,9 @@ public class UserServiceImpl implements UserService {
         ModelAndView modelAndView = new ModelAndView(PagesPaths.REGISTER_PAGE);
         user.setBalance(BigDecimal.valueOf(0.0));
         user.setRegistrationDate(LocalDate.now());
+        if (getUserByEmail(user.getEmail()) != null) {
+            throw new UserAlreadyExistsException("Такой пользователь уже существует");
+        }
         userRepository.create(user);
         modelAndView.addObject(RequestAttributesNames.STATUS, "Успешно");
         modelAndView.addObject(RequestAttributesNames.COLOR, "green");

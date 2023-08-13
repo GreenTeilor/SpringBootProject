@@ -19,9 +19,7 @@ public class HomeController {
     @GetMapping
     public ModelAndView openHomePage(@SessionAttribute(RequestAttributesNames.USER) User user) {
         ModelAndView modelAndView = categoryService.read();
-        modelAndView.addObject(RequestAttributesNames.NAME, user.getName());
-        modelAndView.addObject(RequestAttributesNames.LAST_NAME, user.getLastName());
-        modelAndView.addObject(RequestAttributesNames.BALANCE, user.getBalance());
+        modelAndView.addObject(RequestAttributesNames.USER, user);
         return modelAndView;
     }
 }
