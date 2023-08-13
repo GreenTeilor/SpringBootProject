@@ -11,21 +11,27 @@
 </head>
 <body>
 <jsp:include page="header.jsp"/>
-<div class="row">
-    <c:forEach items="${categoryProducts}" var="product">
-        <div class="col d-flex justify-content-center">
-            <div class="card" style="width: 22rem; margin: 20px; background-color: #dee2e6">
-                <a href="<c:url value="/products/${product.getId()}"/>"><img src="<c:url value="/${product.getImagePath()}"/>" class="card-img-top" style="height: 25rem;" alt="..."></a>
-                <div class="card-body" style="text-align: center">
-                    <h2 class="card-title">${product.getName()}</h2>
-                    <p class="card-text">Цена: <fmt:formatNumber value="${product.getPrice()}"
-                                                                 type="currency"/><br>
-                        ${product.getDescription()}</p>
-                    <a href="<c:url value="/products/${product.getId()}"/>" class="btn btn-primary">Посмотреть</a>
+
+<div class="container-fluid">
+    <div class="row">
+        <c:forEach items="${categoryProducts}" var="product">
+            <div class="col d-flex justify-content-center">
+                <div class="card" style="width: 22rem; margin: 20px 0 20px 0; background-color: #dee2e6">
+                    <a href="<c:url value="/products/${product.getId()}"/>"><img
+                            src="<c:url value="/${product.getImagePath()}"/>" class="card-img-top"
+                            style="height: 25rem;" alt="..."></a>
+                    <div class="card-body" style="text-align: center">
+                        <h2 class="card-title">${product.getName()}</h2>
+                        <p class="card-text"><span style="color: green; font-size: 1.5rem;">Цена: <fmt:formatNumber
+                                value="${product.getPrice()}"
+                                type="currency"/></span><br>
+                                ${product.getDescription()}</p>
+                        <a href="<c:url value="/products/${product.getId()}"/>" class="btn btn-primary">Посмотреть</a>
+                    </div>
                 </div>
             </div>
-        </div>
-    </c:forEach>
+        </c:forEach>
+    </div>
 </div>
 </body>
 </html>

@@ -46,5 +46,14 @@ public class GlobalControllerExceptionHandler {
         modelAndView.addObject(RequestAttributesNames.STATUS, e.getMessage());
         return modelAndView;
     }
+
+    @ExceptionHandler({InsufficientFundsException.class, NoProductsInOrderException.class})
+    @ResponseStatus(HttpStatus.OK)
+    public ModelAndView handleOrderMakingExceptions(Exception e) {
+        ModelAndView modelAndView = new ModelAndView(PagesPaths.CART_PAGE);
+        modelAndView.addObject(RequestAttributesNames.STATUS, e.getMessage());
+        modelAndView.addObject(RequestAttributesNames.COLOR, "red");
+        return modelAndView;
+    }
 }
 

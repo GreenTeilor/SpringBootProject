@@ -17,7 +17,7 @@
     <div class="card">
         <div class="card-body">
             <h3 class="card-title">${product.getName()}</h3>
-            <h6 class="card-subtitle">Жанр: ${product.getCategory()}</h6>
+            <h6 class="card-subtitle">Жанр: ${product.getCategory().getName()}</h6>
             <div class="row">
                 <div class="col-lg-5">
                     <div class="white-box text-left">

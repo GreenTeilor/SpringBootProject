@@ -1,13 +1,11 @@
 package by.teachmeskills.springbootproject.entities;
 
-import jakarta.validation.constraints.NotNull;
-
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class Cart {
-    @NotNull
     private List<Product> cart;
 
     public Cart() {
@@ -22,6 +20,14 @@ public class Cart {
     public void removeProduct(int id) {
         Optional<Product> product = cart.stream().filter(p -> p.getId() == id).findFirst();
         product.ifPresent(p -> cart.remove(p));
+    }
+
+    public BigDecimal getPrice() {
+        return cart.stream().reduce(BigDecimal.ZERO, (p1, p2) -> p1.add(p2.getPrice()), BigDecimal::add);
+    }
+
+    public boolean isEmpty() {
+        return cart.isEmpty();
     }
 
     public int size() {

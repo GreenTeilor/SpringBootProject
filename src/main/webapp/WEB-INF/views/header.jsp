@@ -34,7 +34,7 @@
             String productsInCart = (cart != null && cart.size() != 0) ? String.valueOf(cart.size()) : "";
           %>
           <li class="nav-item">
-            <a class="nav-link" href="<c:url value="/cart"/>">&#128465 Корзина<sup style="color: red; font-weight: bold; font-size: 1rem;"><%=productsInCart%></sup></a>
+            <a class="nav-link" href="<c:url value="/cart"/>">&#128722 Корзина<sup style="color: red; font-weight: bold; font-size: 1rem;"><%=productsInCart%></sup></a>
           </li>
           <li>
             <a class="nav-link" href="<c:url value="/search"/>">&#128269 Поиск</a>

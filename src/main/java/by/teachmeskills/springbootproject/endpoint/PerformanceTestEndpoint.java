@@ -1,6 +1,5 @@
 package by.teachmeskills.springbootproject.endpoint;
 
-import by.teachmeskills.springbootproject.exceptions.EntityOperationException;
 import by.teachmeskills.springbootproject.repositories.CategoryRepository;
 import by.teachmeskills.springbootproject.repositories.ProductRepository;
 import by.teachmeskills.springbootproject.repositories.UserRepository;
@@ -22,7 +21,7 @@ public class PerformanceTestEndpoint {
     private final ProductRepository productRepository;
 
     @ReadOperation
-    public ModelAndView getResults() throws EntityOperationException {
+    public ModelAndView getResults() {
         ModelAndView modelAndView = new ModelAndView("performanceInfo");
         ModelMap modelMap = new ModelMap();
         long lastResult;
@@ -50,7 +49,7 @@ public class PerformanceTestEndpoint {
 
         watch = new StopWatch();
         watch.start();
-        productRepository.findProducts("Последнее желание");
+        productRepository.findProducts("Последнее желание", 0);
         watch.stop();
         lastResult = watch.getTotalTimeNanos();
         modelMap.addAttribute("productsFindResult", lastResult);

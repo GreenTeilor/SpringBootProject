@@ -1,6 +1,9 @@
 package by.teachmeskills.springbootproject.entities;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,8 +16,10 @@ import java.util.Objects;
 @NoArgsConstructor
 @Getter
 @Setter
+@MappedSuperclass
 public class BaseEntity {
-    @NotNull
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Integer id;
 
     @Override

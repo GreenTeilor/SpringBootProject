@@ -1,5 +1,11 @@
 package by.teachmeskills.springbootproject.entities;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -13,11 +19,14 @@ import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
 @SuperBuilder
 @NoArgsConstructor
+@Entity
+@Table(name = "users")
 public class User extends BaseEntity {
     @Pattern(regexp = "[A-Za-z]+", message = "Некорректное имя")
     @NotBlank(message = "Не должно быть пустым")
@@ -46,4 +55,8 @@ public class User extends BaseEntity {
 
     @Pattern(regexp = "^\\+375((29)|(44)|(25)|(33))[0-9]{7}$", message = "Некорректный номер телефона")
     private String phoneNumber;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @JoinColumn(name = "userId")
+    private List<Order> orders;
 }
