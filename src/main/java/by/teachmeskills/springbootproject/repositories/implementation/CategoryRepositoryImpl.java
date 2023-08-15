@@ -5,7 +5,6 @@ import by.teachmeskills.springbootproject.repositories.CategoryRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,27 +19,23 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 
     @Override
     public Category create(Category category) {
-        Session session = manager.unwrap(Session.class);
-        session.persist(category);
+        manager.persist(category);
         return category;
     }
 
     @Override
     public List<Category> read() {
-        Session session = manager.unwrap(Session.class);
-        return session.createQuery(GET_CATEGORIES_QUERY, Category.class).getResultList();
+        return manager.createQuery(GET_CATEGORIES_QUERY, Category.class).getResultList();
     }
 
     @Override
     public Category update(Category category) {
-        Session session = manager.unwrap(Session.class);
-        return session.merge(category);
+        return manager.merge(category);
     }
 
     @Override
     public void delete(int id) {
-        Session session = manager.unwrap(Session.class);
-        Category category = session.get(Category.class, id);
-        session.remove(category);
+        Category category = manager.find(Category.class, id);
+        manager.remove(category);
     }
 }
