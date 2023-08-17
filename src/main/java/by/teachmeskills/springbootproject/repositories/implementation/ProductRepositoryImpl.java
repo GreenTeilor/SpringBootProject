@@ -4,9 +4,8 @@ import by.teachmeskills.springbootproject.entities.Product;
 import by.teachmeskills.springbootproject.repositories.ProductRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Session;
-import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,22 +22,19 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public List<Product> getCategoryProducts(String category) {
-        Session session = manager.unwrap(Session.class);
-        Query<Product> query = session.createQuery(GET_CATEGORY_PRODUCTS_QUERY, Product.class);
+        TypedQuery<Product> query = manager.createQuery(GET_CATEGORY_PRODUCTS_QUERY, Product.class);
         query.setParameter("category", category);
         return query.getResultList();
     }
 
     @Override
     public Product getProductById(int id) {
-        Session session = manager.unwrap(Session.class);
-        return session.get(Product.class, id);
+        return manager.find(Product.class, id);
     }
 
     @Override
     public List<Product> findProducts(String keyWords, int pageNumber) {
-        Session session = manager.unwrap(Session.class);
-        Query<Product> query = session.createQuery(SEARCH_PRODUCTS_QUERY, Product.class);
+        TypedQuery<Product> query = manager.createQuery(SEARCH_PRODUCTS_QUERY, Product.class);
         String searchPattern = "%" + keyWords.trim() + "%";
         query.setParameter("name", searchPattern);
         query.setParameter("description", searchPattern);
@@ -49,27 +45,23 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public Product create(Product product) {
-        Session session = manager.unwrap(Session.class);
-        session.persist(product);
+        manager.persist(product);
         return product;
     }
 
     @Override
     public List<Product> read() {
-        Session session = manager.unwrap(Session.class);
-        return session.createQuery(GET_PRODUCTS_QUERY, Product.class).getResultList();
+        return manager.createQuery(GET_PRODUCTS_QUERY, Product.class).getResultList();
     }
 
     @Override
     public Product update(Product product) {
-        Session session = manager.unwrap(Session.class);
-        return session.merge(product);
+        return manager.merge(product);
     }
 
     @Override
     public void delete(int id) {
-        Session session = manager.unwrap(Session.class);
-        Product user = session.get(Product.class, id);
-        session.remove(user);
+        Product user = manager.find(Product.class, id);
+        manager.remove(user);
     }
 }
