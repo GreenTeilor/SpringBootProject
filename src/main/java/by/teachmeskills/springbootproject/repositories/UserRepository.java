@@ -2,12 +2,14 @@ package by.teachmeskills.springbootproject.repositories;
 
 import by.teachmeskills.springbootproject.entities.User;
 
+import java.util.Optional;
+
 public interface UserRepository extends BaseRepository<User> {
-    User getUserByEmail(String email);
+    Optional<User> getUserByEmail(String email);
 
-    User getUserById(int id);
+    Optional<User> getUserById(int id);
 
-    User getUser(String email, String password);
+    Optional<User> getUser(String email, String password);
 
     void updateAddressAndPhoneNumber(String address, String phoneNumber, String email);
 

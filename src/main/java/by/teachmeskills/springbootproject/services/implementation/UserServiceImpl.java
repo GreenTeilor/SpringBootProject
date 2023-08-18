@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,12 +33,12 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public User getUserByEmail(String email) {
+    public Optional<User> getUserByEmail(String email) {
         return userRepository.getUserByEmail(email);
     }
 
     @Override
-    public User getUserById(int id) {
+    public Optional<User> getUserById(int id) {
         return userRepository.getUserById(id);
     }
 
@@ -45,9 +46,9 @@ public class UserServiceImpl implements UserService {
     public ModelAndView getUser(String email, String password, BindingResult bindingResult, Model model) throws AuthorizationException {
         ModelAndView modelAndView = new ModelAndView(PagesPaths.LOGIN_PAGE);
         if (!bindingResult.hasFieldErrors(RequestAttributesNames.EMAIL) && !bindingResult.hasFieldErrors(RequestAttributesNames.PASSWORD)) {
-            User authenticatedUser = userRepository.getUser(email, password);
-            if (authenticatedUser != null) {
-                model.addAttribute(RequestAttributesNames.USER, authenticatedUser);
+            Optional<User> authenticatedUser = userRepository.getUser(email, password);
+            if (authenticatedUser.isPresent()) {
+                model.addAttribute(RequestAttributesNames.USER, authenticatedUser.get());
                 return new ModelAndView("redirect:" + PagesPaths.HOME_PAGE);
             }
             throw new AuthorizationException("Неверный логин или пароль");
@@ -129,7 +130,7 @@ public class UserServiceImpl implements UserService {
         ModelAndView modelAndView = new ModelAndView(PagesPaths.REGISTER_PAGE);
         user.setBalance(BigDecimal.valueOf(0.0));
         user.setRegistrationDate(LocalDate.now());
-        if (getUserByEmail(user.getEmail()) != null) {
+        if (getUserByEmail(user.getEmail()).isPresent()) {
             throw new UserAlreadyExistsException("Такой пользователь уже существует");
         }
         userRepository.create(user);

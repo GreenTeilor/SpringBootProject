@@ -9,10 +9,10 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -33,30 +33,30 @@ public class UserRepositoryImpl implements UserRepository {
     private final EntityManager manager;
 
     @Override
-    public User getUserByEmail(String email) {
+    public Optional<User> getUserByEmail(String email) {
         TypedQuery<User> query = manager.createQuery(GET_USER_BY_EMAIL, User.class);
         query.setParameter("email", email);
         try {
-            return query.getSingleResult();
+            return Optional.of(query.getSingleResult());
         } catch (NoResultException e) {
-            return null;
+            return Optional.empty();
         }
     }
 
     @Override
-    public User getUserById(int id) {
-        return manager.find(User.class, id);
+    public Optional<User> getUserById(int id) {
+        return Optional.ofNullable(manager.find(User.class, id));
     }
 
     @Override
-    public User getUser(String email, String password) {
+    public Optional<User> getUser(String email, String password) {
         TypedQuery<User> query = manager.createQuery(SEARCH_USER_QUERY, User.class);
         query.setParameter("email", email);
         query.setParameter("password", HashUtils.getHash(password));
         try {
-            return query.getSingleResult();
+            return Optional.of(query.getSingleResult());
         } catch (NoResultException e) {
-            return null;
+            return Optional.empty();
         }
     }
 

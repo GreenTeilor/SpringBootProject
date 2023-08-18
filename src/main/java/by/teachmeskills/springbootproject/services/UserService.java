@@ -11,9 +11,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Optional;
+
 public interface UserService extends BaseService<User>{
-    User getUserByEmail(String email);
-    User getUserById(int id);
+    Optional<User> getUserByEmail(String email);
+    Optional<User> getUserById(int id);
     ModelAndView getUser(String email, String password, BindingResult bindingResult, Model model) throws AuthorizationException;
     void updateAddressAndPhoneNumber(String address, String phoneNumber, String email);
     ModelAndView getUserOrders(User user);
