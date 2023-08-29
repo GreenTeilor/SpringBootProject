@@ -55,7 +55,8 @@
                                         <div class="media">
                                             <label for="address">Адрес</label>
                                             <div>
-                                                <input class="info-input" type="text" name="address" id="address" placeholder="Адрес">
+                                                <input class="info-input" type="text" name="address" id="address"
+                                                       placeholder="Адрес">
                                             </div>
                                             <div class="errorInput">${addressError}</div>
                                         </div>
@@ -116,6 +117,16 @@
     <div class="history">
         <div class="count-data text-center">
             <h6 class="count h2" data-to="500" data-speed="500">История заказов</h6>
+            <form method="POST" action="#">
+                <button type="submit" class="btn btn-primary">Экспорт заказов</button>
+            </form>
+            <form method="GET" action="#" class="file-import">
+                <label class="label">
+                    <i>&#128204</i>
+                    <input type="file" class="title" accept=".csv">
+                </label>
+                <button type="submit" class="btn btn-primary">Импорт заказов</button>
+            </form>
         </div>
     </div>
 

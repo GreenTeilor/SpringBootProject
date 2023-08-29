@@ -8,10 +8,22 @@
     <jsp:include page="dependencies.jsp"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="<c:url value="/style/common.css"/>" rel="stylesheet">
+    <link href="<c:url value="/style/category.css"/>" rel="stylesheet">
 </head>
 <body>
 <jsp:include page="header.jsp"/>
-
+<div class="files">
+    <form method="POST" action="#">
+        <button type="submit" class="btn btn-primary">Экспорт продуктов</button>
+    </form>
+    <form method="GET" action="#" class="file-import">
+        <label class="label">
+            <i>&#128204</i>
+            <input type="file" class="title" accept=".csv">
+        </label>
+        <button type="submit" class="btn btn-primary">Импорт продуктов</button>
+    </form>
+</div>
 <div class="container-fluid">
     <div class="row">
         <c:forEach items="${categoryProducts}" var="product">
