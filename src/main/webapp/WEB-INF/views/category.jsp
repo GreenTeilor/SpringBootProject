@@ -19,7 +19,7 @@
     <form method="GET" action="#" class="file-import">
         <label class="label">
             <i>&#128204</i>
-            <input type="file" class="title" accept=".csv">
+            <input id="file" name="file" type="file" class="title" accept=".csv">
         </label>
         <button type="submit" class="btn btn-primary">Импорт продуктов</button>
     </form>

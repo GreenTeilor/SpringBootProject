@@ -15,14 +15,14 @@
 </c:if>
 <div class="files">
     <form method="POST" action="#">
-        <button type="submit" class="btn btn-primary">Экспорт продуктов</button>
+        <button type="submit" class="btn btn-primary">Экспорт категорий</button>
     </form>
     <form method="GET" action="#" class="file-import">
         <label class="label">
             <i>&#128204</i>
-            <input type="file" class="title" accept=".csv">
+            <input id="file" name="file" type="file" class="title" accept=".csv">
         </label>
-        <button type="submit" class="btn btn-primary">Импорт продуктов</button>
+        <button type="submit" class="btn btn-primary">Импорт категорий</button>
     </form>
 </div>
 <div class="container-fluid">
