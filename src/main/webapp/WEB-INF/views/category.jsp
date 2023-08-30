@@ -13,10 +13,12 @@
 <body>
 <jsp:include page="header.jsp"/>
 <div class="files">
-    <form method="POST" action="#">
+    <form method="POST" action="<c:url value="/categories/saveProducts"/>">
+        <input id="categoryNameSave" name="categoryName" value="${categoryName}" hidden>
         <button type="submit" class="btn btn-primary">Экспорт продуктов</button>
     </form>
-    <form method="GET" action="#" class="file-import">
+    <form method="POST" action="<c:url value="/categories/loadProducts"/>" enctype="multipart/form-data" class="file-import">
+        <input id="categoryNameLoad" name="categoryName" value="${categoryName}" hidden>
         <label class="label">
             <i>&#128204</i>
             <input id="file" name="file" type="file" class="title" accept=".csv">

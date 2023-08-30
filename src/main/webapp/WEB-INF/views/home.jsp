@@ -14,10 +14,10 @@
     <jsp:include page="info.jsp"/>
 </c:if>
 <div class="files">
-    <form method="POST" action="#">
+    <form method="POST" action="<c:url value="/home/saveCategories"/>">
         <button type="submit" class="btn btn-primary">Экспорт категорий</button>
     </form>
-    <form method="GET" action="#" class="file-import">
+    <form method="POST" action="<c:url value="/home/loadCategories"/>" enctype="multipart/form-data" class="file-import">
         <label class="label">
             <i>&#128204</i>
             <input id="file" name="file" type="file" class="title" accept=".csv">

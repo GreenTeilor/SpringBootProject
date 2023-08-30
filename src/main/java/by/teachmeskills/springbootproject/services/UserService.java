@@ -7,10 +7,15 @@ import by.teachmeskills.springbootproject.exceptions.AuthorizationException;
 import by.teachmeskills.springbootproject.exceptions.InsufficientFundsException;
 import by.teachmeskills.springbootproject.exceptions.NoProductsInOrderException;
 import by.teachmeskills.springbootproject.exceptions.UserAlreadyExistsException;
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.IOException;
 import java.util.Optional;
 
 public interface UserService extends BaseService<User>{
@@ -20,8 +25,8 @@ public interface UserService extends BaseService<User>{
     void updateAddressAndPhoneNumber(String address, String phoneNumber, String email);
     ModelAndView getUserOrders(User user);
     ModelAndView addAddressAndPhoneNumberInfo(String address, String phoneNumber, User userInSession, BindingResult bindingResult);
-
     Statistics getUserStatistics(int id);
-
-    ModelAndView makeOrder(User user, Cart cart) throws InsufficientFundsException, UserAlreadyExistsException, NoProductsInOrderException;
+    ModelAndView makeOrder(User user, Cart cart) throws InsufficientFundsException, NoProductsInOrderException;
+    void saveOrdersToFile(int userId, HttpServletResponse response) throws IOException, CsvRequiredFieldEmptyException, CsvDataTypeMismatchException;
+    ModelAndView loadOrdersFromFile(User user, MultipartFile file) throws IOException;
 }

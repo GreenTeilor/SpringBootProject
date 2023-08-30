@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping("register")
+@RequestMapping("/register")
 @RequiredArgsConstructor
 public class RegisterController {
 

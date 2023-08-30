@@ -2,6 +2,8 @@ package by.teachmeskills.springbootproject.services.implementation;
 
 import by.teachmeskills.springbootproject.constants.PagesPaths;
 import by.teachmeskills.springbootproject.constants.RequestAttributesNames;
+import by.teachmeskills.springbootproject.csv.OrderProductCsv;
+import by.teachmeskills.springbootproject.csv.converters.OrdersProductsConverter;
 import by.teachmeskills.springbootproject.entities.Cart;
 import by.teachmeskills.springbootproject.entities.Order;
 import by.teachmeskills.springbootproject.entities.Statistics;
@@ -11,15 +13,31 @@ import by.teachmeskills.springbootproject.exceptions.InsufficientFundsException;
 import by.teachmeskills.springbootproject.exceptions.NoProductsInOrderException;
 import by.teachmeskills.springbootproject.exceptions.UserAlreadyExistsException;
 import by.teachmeskills.springbootproject.repositories.UserRepository;
+import by.teachmeskills.springbootproject.repositories.implementation.OrderRepositoryImpl;
 import by.teachmeskills.springbootproject.services.UserService;
 import by.teachmeskills.springbootproject.utils.ErrorPopulatorUtils;
+import com.opencsv.CSVWriter;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.bean.StatefulBeanToCsv;
+import com.opencsv.bean.StatefulBeanToCsvBuilder;
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -31,6 +49,8 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final OrdersProductsConverter ordersProductsConverter;
+    private final OrderRepositoryImpl orderRepository;
 
     @Override
     public Optional<User> getUserByEmail(String email) {
@@ -122,6 +142,40 @@ public class UserServiceImpl implements UserService {
         modelAndView.addObject(RequestAttributesNames.STATUS, "Заказ оформлен!");
         modelAndView.addObject(RequestAttributesNames.COLOR, "green");
         return modelAndView;
+    }
+
+    @Override
+    public void saveOrdersToFile(int userId, HttpServletResponse response) throws IOException, CsvRequiredFieldEmptyException, CsvDataTypeMismatchException {
+        try (Writer writer = new OutputStreamWriter(response.getOutputStream())) {
+            StatefulBeanToCsv<OrderProductCsv> beanToCsv = new StatefulBeanToCsvBuilder<OrderProductCsv>(writer)
+                    .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER)
+                    .withSeparator('~')
+                    .build();
+            response.setContentType("text/csv");
+            response.setHeader("Content-Disposition", "attachment; filename=" + "orders_products.csv");
+            List<Order> orders = orderRepository.getUserOrders(userId);
+            List<OrderProductCsv> productCsvs = ordersProductsConverter.fromOrders(orders);
+            beanToCsv.write(productCsvs);
+        }
+    }
+
+    @Override
+    @Transactional
+    public ModelAndView loadOrdersFromFile(User user, MultipartFile file) throws IOException {
+        ModelAndView modelAndView = new ModelAndView("redirect:/profile");
+        try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+            CsvToBean<OrderProductCsv> csvToBean = new CsvToBeanBuilder<OrderProductCsv>(reader)
+                    .withType(OrderProductCsv.class)
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .withSeparator('~')
+                    .build();
+            List<OrderProductCsv> orderProductCsvs = new ArrayList<>();
+            csvToBean.forEach(orderProductCsvs::add);
+            List<Order> orders = ordersProductsConverter.toOrders(orderProductCsvs);
+            orders.forEach(user.getOrders()::add);
+            userRepository.update(user);
+            return modelAndView;
+        }
     }
 
     @Override
