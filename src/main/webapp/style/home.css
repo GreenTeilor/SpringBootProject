@@ -46,3 +46,9 @@
 .file-import .label:hover i, .file-import .label:hover .title {
     color: #ffffff
 }
+
+@media(max-width: 380px) {
+    .file-import .label {
+        width: 340px;
+    }
+}

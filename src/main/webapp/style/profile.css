@@ -205,6 +205,12 @@ mark {
     color: #000
 }
 
+@media(max-width: 380px) {
+    .file-import .label {
+        width: 340px;
+    }
+}
+
 .history span {
     color: black;
     font-size: 1.5rem;
