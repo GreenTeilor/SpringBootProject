@@ -1,5 +1,6 @@
 package by.teachmeskills.springbootproject.entities;
 
+import com.opencsv.bean.CsvBindByName;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,6 +21,7 @@ import java.util.Objects;
 public class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @CsvBindByName
     protected Integer id;
 
     @Override

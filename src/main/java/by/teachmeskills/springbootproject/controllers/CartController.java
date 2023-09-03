@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping("cart")
+@RequestMapping("/cart")
 @SessionAttributes(SessionAttributesNames.CART)
 @RequiredArgsConstructor
 public class CartController {
@@ -36,12 +36,12 @@ public class CartController {
         return new ModelAndView(PagesPaths.CART_PAGE);
     }
 
-    @GetMapping("addProduct/{id}")
+    @GetMapping("/addProduct/{id}")
     public ModelAndView addProduct(@PathVariable int id, @ModelAttribute(SessionAttributesNames.CART) Cart cart) {
         return productService.addProductToCart(id, cart);
     }
 
-    @GetMapping("removeProduct/{id}")
+    @GetMapping("/removeProduct/{id}")
     public ModelAndView removeProduct(@PathVariable int id, @ModelAttribute(SessionAttributesNames.CART) Cart cart) {
         ModelAndView modelAndView = new ModelAndView(PagesPaths.CART_PAGE);
         cart.removeProduct(id);
@@ -49,7 +49,7 @@ public class CartController {
         return modelAndView;
     }
 
-    @GetMapping("clear")
+    @GetMapping("/clear")
     public ModelAndView clearCart(@ModelAttribute(SessionAttributesNames.CART) Cart cart) {
         ModelAndView modelAndView = new ModelAndView(PagesPaths.CART_PAGE);
         cart.clear();
@@ -58,7 +58,7 @@ public class CartController {
     }
 
 
-    @GetMapping("makeOrder")
+    @GetMapping("/makeOrder")
     public ModelAndView makeOrder(@SessionAttribute(SessionAttributesNames.USER) User user, @ModelAttribute(SessionAttributesNames.CART) Cart cart) throws InsufficientFundsException, UserAlreadyExistsException, NoProductsInOrderException {
         return userService.makeOrder(user, cart);
     }

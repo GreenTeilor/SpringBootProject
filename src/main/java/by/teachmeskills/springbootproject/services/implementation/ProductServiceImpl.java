@@ -2,26 +2,45 @@ package by.teachmeskills.springbootproject.services.implementation;
 
 import by.teachmeskills.springbootproject.constants.PagesPaths;
 import by.teachmeskills.springbootproject.constants.RequestAttributesNames;
+import by.teachmeskills.springbootproject.csv.ProductCsv;
+import by.teachmeskills.springbootproject.csv.converters.ProductConverter;
 import by.teachmeskills.springbootproject.entities.Cart;
 import by.teachmeskills.springbootproject.entities.Product;
 import by.teachmeskills.springbootproject.entities.SearchCriteria;
 import by.teachmeskills.springbootproject.exceptions.UserAlreadyExistsException;
 import by.teachmeskills.springbootproject.repositories.CategoryRepository;
-import by.teachmeskills.springbootproject.repositories.ProductRepository;
+import by.teachmeskills.springbootproject.repositories.implementation.ProductRepositoryImpl;
 import by.teachmeskills.springbootproject.services.ProductService;
+import com.opencsv.CSVWriter;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.bean.StatefulBeanToCsv;
+import com.opencsv.bean.StatefulBeanToCsvBuilder;
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ProductServiceImpl implements ProductService {
-    private final ProductRepository productRepository;
+    private final ProductRepositoryImpl productRepository;
     private final CategoryRepository categoryRepository;
+    private final ProductConverter productConverter;
 
     @Override
     public ModelAndView getCategoryProducts(String category) {
@@ -60,8 +79,40 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public void saveToFile(String categoryName, HttpServletResponse response) throws IOException, CsvRequiredFieldEmptyException, CsvDataTypeMismatchException {
+        try (Writer writer = new OutputStreamWriter(response.getOutputStream())) {
+            StatefulBeanToCsv<ProductCsv> beanToCsv = new StatefulBeanToCsvBuilder<ProductCsv>(writer)
+                    .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER)
+                    .withSeparator('~')
+                    .build();
+            response.setContentType("text/csv");
+            response.setHeader("Content-Disposition", "attachment; filename=" + "products.csv");
+            List<Product> products = productRepository.getCategoryProducts(categoryName);
+            products.forEach(p -> p.setId(null));
+            beanToCsv.write(products.stream().map(productConverter::toCsv).toList());
+        }
+    }
+
+    @Override
     @Transactional
-    public ModelAndView create(Product product) throws UserAlreadyExistsException {
+    public ModelAndView loadFromFile(String categoryName, MultipartFile file) throws IOException {
+        ModelAndView modelAndView = new ModelAndView("redirect:/categories/" + categoryName);
+        try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+            CsvToBean<ProductCsv> csvToBean = new CsvToBeanBuilder<ProductCsv>(reader)
+                    .withType(ProductCsv.class)
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .withSeparator('~')
+                    .build();
+            List<ProductCsv> products = new ArrayList<>();
+            csvToBean.forEach(products::add);
+            products.stream().map(productConverter::fromCsv).forEach(productRepository::create);
+            return modelAndView;
+        }
+    }
+
+    @Override
+    @Transactional
+    public ModelAndView create(Product product) {
         ModelAndView modelAndView = new ModelAndView(PagesPaths.PRODUCT_PAGE);
         productRepository.create(product);
         return modelAndView;

@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping("products")
+@RequestMapping("/products")
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService service;
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ModelAndView openProductPage(@PathVariable int id) {
         return service.getProductById(id);
     }

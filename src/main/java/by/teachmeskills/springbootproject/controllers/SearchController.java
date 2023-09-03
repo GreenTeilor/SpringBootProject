@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping("search")
+@RequestMapping("/search")
 @SessionAttributes(SessionAttributesNames.SEARCH_CRITERIA)
 @RequiredArgsConstructor
 public class SearchController {
@@ -35,19 +35,19 @@ public class SearchController {
         return productService.findProducts(searchCriteria);
     }
 
-    @GetMapping("next")
+    @GetMapping("/next")
     public ModelAndView paginationNext(@ModelAttribute(SessionAttributesNames.SEARCH_CRITERIA) SearchCriteria searchCriteria) {
         searchCriteria.setPaginationNumber(searchCriteria.getPaginationNumber() + 1);
         return productService.findProducts(searchCriteria);
     }
 
-    @GetMapping("prev")
+    @GetMapping("/prev")
     public ModelAndView paginationPrev(@ModelAttribute(SessionAttributesNames.SEARCH_CRITERIA) SearchCriteria searchCriteria) {
         searchCriteria.setPaginationNumber(searchCriteria.getPaginationNumber() - 1);
         return productService.findProducts(searchCriteria);
     }
 
-    @GetMapping("{pageNumber}")
+    @GetMapping("/{pageNumber}")
     public ModelAndView paginationPageNumber(@PathVariable int pageNumber, @ModelAttribute(SessionAttributesNames.SEARCH_CRITERIA) SearchCriteria searchCriteria) {
         searchCriteria.setPaginationNumber(pageNumber);
         return productService.findProducts(searchCriteria);

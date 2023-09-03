@@ -6,12 +6,25 @@
     <jsp:include page="dependencies.jsp"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="style/common.css" rel="stylesheet">
+    <link href="style/home.css" rel="stylesheet">
 </head>
 <body>
 <jsp:include page="header.jsp"/>
 <c:if test="${sessionScope.user != null}">
     <jsp:include page="info.jsp"/>
 </c:if>
+<div class="files">
+    <form method="POST" action="<c:url value="/home/saveCategories"/>">
+        <button type="submit" class="btn btn-primary">Экспорт категорий</button>
+    </form>
+    <form method="POST" action="<c:url value="/home/loadCategories"/>" enctype="multipart/form-data" class="file-import">
+        <label class="label">
+            <i>&#128204</i>
+            <input id="file" name="file" type="file" class="title" accept=".csv">
+        </label>
+        <button type="submit" class="btn btn-primary">Импорт категорий</button>
+    </form>
+</div>
 <div class="container-fluid">
     <div class="row">
         <c:forEach items="${categories}" var="item">

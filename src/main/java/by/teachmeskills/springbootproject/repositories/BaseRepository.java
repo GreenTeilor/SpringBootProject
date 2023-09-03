@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface BaseRepository<T extends BaseEntity> {
 
-    T create(T entity) throws UserAlreadyExistsException;
+    T create(T entity);
 
     List<T> read();
 
