@@ -7,8 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class SearchCriteria {
-    private Integer paginationNumber;
+public class SearchCriteria extends PagingParams{
     private String keyWords;
     private String searchCategory;
     private Integer priceFrom;

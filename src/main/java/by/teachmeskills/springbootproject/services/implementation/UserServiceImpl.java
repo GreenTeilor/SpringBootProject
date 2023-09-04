@@ -6,14 +6,16 @@ import by.teachmeskills.springbootproject.csv.OrderProductCsv;
 import by.teachmeskills.springbootproject.csv.converters.OrdersProductsConverter;
 import by.teachmeskills.springbootproject.entities.Cart;
 import by.teachmeskills.springbootproject.entities.Order;
+import by.teachmeskills.springbootproject.entities.PagingParams;
 import by.teachmeskills.springbootproject.entities.Statistics;
 import by.teachmeskills.springbootproject.entities.User;
 import by.teachmeskills.springbootproject.exceptions.AuthorizationException;
 import by.teachmeskills.springbootproject.exceptions.InsufficientFundsException;
 import by.teachmeskills.springbootproject.exceptions.NoProductsInOrderException;
+import by.teachmeskills.springbootproject.exceptions.NoResourceFoundException;
 import by.teachmeskills.springbootproject.exceptions.UserAlreadyExistsException;
+import by.teachmeskills.springbootproject.repositories.OrderRepository;
 import by.teachmeskills.springbootproject.repositories.UserRepository;
-import by.teachmeskills.springbootproject.repositories.implementation.OrderRepositoryImpl;
 import by.teachmeskills.springbootproject.services.UserService;
 import by.teachmeskills.springbootproject.utils.ErrorPopulatorUtils;
 import com.opencsv.CSVWriter;
@@ -25,6 +27,9 @@ import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -50,23 +55,18 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final OrdersProductsConverter ordersProductsConverter;
-    private final OrderRepositoryImpl orderRepository;
+    private final OrderRepository orderRepository;
 
     @Override
     public Optional<User> getUserByEmail(String email) {
-        return userRepository.getUserByEmail(email);
+        return userRepository.findByEmail(email);
     }
 
     @Override
-    public Optional<User> getUserById(int id) {
-        return userRepository.getUserById(id);
-    }
-
-    @Override
-    public ModelAndView getUser(String email, String password, BindingResult bindingResult, Model model) throws AuthorizationException {
+    public ModelAndView authenticateUser(String email, String password, BindingResult bindingResult, Model model) throws AuthorizationException {
         ModelAndView modelAndView = new ModelAndView(PagesPaths.LOGIN_PAGE);
         if (!bindingResult.hasFieldErrors(RequestAttributesNames.EMAIL) && !bindingResult.hasFieldErrors(RequestAttributesNames.PASSWORD)) {
-            Optional<User> authenticatedUser = userRepository.getUser(email, password);
+            Optional<User> authenticatedUser = userRepository.findByEmailAndPassword(email, password);
             if (authenticatedUser.isPresent()) {
                 model.addAttribute(RequestAttributesNames.USER, authenticatedUser.get());
                 return new ModelAndView("redirect:" + PagesPaths.HOME_PAGE);
@@ -78,36 +78,32 @@ public class UserServiceImpl implements UserService {
         return modelAndView;
     }
 
-    @Override
-    @Transactional
-    public void updateAddressAndPhoneNumber(String address, String phoneNumber, String email) {
-        userRepository.updateAddressAndPhoneNumber(address, phoneNumber, email);
-    }
-
     public static ModelAndView makeModelAndView(User user, Statistics statistics, List<Order> orders) {
         ModelAndView modelAndView = new ModelAndView(PagesPaths.PROFILE_PAGE);
-        modelAndView.addObject(user);
-        modelAndView.addObject(statistics);
+        modelAndView.addObject(RequestAttributesNames.USER, user);
+        modelAndView.addObject(RequestAttributesNames.STATISTICS, statistics);
         modelAndView.addObject(RequestAttributesNames.ORDERS, orders);
         return modelAndView;
     }
 
     @Override
-    public ModelAndView getUserOrders(User user) {
+    public ModelAndView getUserInfo(User user, PagingParams params) {
+        Pageable paging = PageRequest.of(params.getPageNumber(), params.getPageSize(), Sort.by("date").descending());
+        List<Order> orders = orderRepository.findAllByUserId(user.getId(), paging);
         Statistics statistics = getUserStatistics(user.getId());
-        List<Order> orders = user.getOrders();
         return makeModelAndView(user, statistics, orders);
     }
 
     @Override
     @Transactional
-    public ModelAndView addAddressAndPhoneNumberInfo(String address, String phoneNumber, User user, BindingResult bindingResult) {
+    public ModelAndView addAddressAndPhoneNumberInfo(String address, String phoneNumber, User user, BindingResult bindingResult, PagingParams params) {
         Statistics statistics = getUserStatistics(user.getId());
-        List<Order> orders = user.getOrders();
+        Pageable paging = PageRequest.of(params.getPageNumber(), params.getPageSize(), Sort.by("date").descending());
+        List<Order> orders = orderRepository.findAllByUserId(user.getId(), paging);
         if (!bindingResult.hasFieldErrors(RequestAttributesNames.ADDRESS) && !bindingResult.hasFieldErrors(RequestAttributesNames.PHONE_NUMBER)) {
             user.setAddress(address);
             user.setPhoneNumber(phoneNumber);
-            userRepository.updateAddressAndPhoneNumber(address, phoneNumber, user.getEmail());
+            userRepository.save(user);
         }
         ModelAndView modelAndView = makeModelAndView(user, statistics, orders);
         ErrorPopulatorUtils.populateError(RequestAttributesNames.ADDRESS, modelAndView, bindingResult);
@@ -136,7 +132,7 @@ public class UserServiceImpl implements UserService {
         Order order = Order.builder().userId(user.getId()).date(LocalDate.now()).products(new ArrayList<>(cart.getProducts())).price(orderPrice).build();
         user.getOrders().add(order);
         user.setBalance(user.getBalance().subtract(orderPrice));
-        userRepository.update(user);
+        userRepository.save(user);
         cart.clear();
         ModelAndView modelAndView = new ModelAndView(PagesPaths.CART_PAGE);
         modelAndView.addObject(RequestAttributesNames.STATUS, "Заказ оформлен!");
@@ -153,7 +149,7 @@ public class UserServiceImpl implements UserService {
                     .build();
             response.setContentType("text/csv");
             response.setHeader("Content-Disposition", "attachment; filename=" + "orders_products.csv");
-            List<Order> orders = orderRepository.getUserOrders(userId);
+            List<Order> orders = orderRepository.findAllByUserId(userId);
             List<OrderProductCsv> productCsvs = ordersProductsConverter.fromOrders(orders);
             beanToCsv.write(productCsvs);
         }
@@ -173,7 +169,7 @@ public class UserServiceImpl implements UserService {
             csvToBean.forEach(orderProductCsvs::add);
             List<Order> orders = ordersProductsConverter.toOrders(orderProductCsvs);
             orders.forEach(user.getOrders()::add);
-            userRepository.update(user);
+            userRepository.save(user);
             return modelAndView;
         }
     }
@@ -187,28 +183,31 @@ public class UserServiceImpl implements UserService {
         if (getUserByEmail(user.getEmail()).isPresent()) {
             throw new UserAlreadyExistsException("Такой пользователь уже существует");
         }
-        userRepository.create(user);
+        userRepository.save(user);
         modelAndView.addObject(RequestAttributesNames.STATUS, "Успешно");
         modelAndView.addObject(RequestAttributesNames.COLOR, "green");
         return modelAndView;
     }
 
     @Override
-    public ModelAndView read() {
+    public ModelAndView read(PagingParams params) {
         ModelAndView modelAndView = new ModelAndView(PagesPaths.HOME_PAGE);
-        modelAndView.addObject(RequestAttributesNames.USER, userRepository.read());
+        Pageable paging = PageRequest.of(params.getPageNumber(), params.getPageSize(), Sort.by("name").ascending());
+        modelAndView.addObject(RequestAttributesNames.USER, userRepository.findAll(paging).getContent());
         return modelAndView;
     }
 
     @Override
     @Transactional
-    public User update(User user) {
-        return userRepository.update(user);
+    public User update(User user) throws NoResourceFoundException {
+        userRepository.findById(user.getId()).orElseThrow(() ->
+                new NoResourceFoundException("No user with id " + user.getId() + " found"));
+        return userRepository.save(user);
     }
 
     @Override
     @Transactional
     public void delete(int id) {
-        userRepository.delete(id);
+        userRepository.deleteById(id);
     }
 }

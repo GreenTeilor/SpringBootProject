@@ -3,7 +3,9 @@ package by.teachmeskills.springbootproject.services.implementation;
 import by.teachmeskills.springbootproject.constants.PagesPaths;
 import by.teachmeskills.springbootproject.constants.RequestAttributesNames;
 import by.teachmeskills.springbootproject.entities.Category;
-import by.teachmeskills.springbootproject.repositories.implementation.CategoryRepositoryImpl;
+import by.teachmeskills.springbootproject.entities.PagingParams;
+import by.teachmeskills.springbootproject.exceptions.NoResourceFoundException;
+import by.teachmeskills.springbootproject.repositories.CategoryRepository;
 import by.teachmeskills.springbootproject.services.CategoryService;
 import com.opencsv.CSVWriter;
 import com.opencsv.bean.CsvToBean;
@@ -14,6 +16,9 @@ import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,7 +37,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class CategoryServiceImpl implements CategoryService {
-    private final CategoryRepositoryImpl categoryRepository;
+    private final CategoryRepository categoryRepository;
 
     @Override
     public void saveToFile(HttpServletResponse response) throws IOException, CsvRequiredFieldEmptyException, CsvDataTypeMismatchException {
@@ -43,7 +48,7 @@ public class CategoryServiceImpl implements CategoryService {
                     .build();
             response.setContentType("text/csv");
             response.setHeader("Content-Disposition", "attachment; filename=" + "categories.csv");
-            List<Category> categories = categoryRepository.read();
+            List<Category> categories = categoryRepository.findAll();
             categories.forEach(c -> c.setId(null));
             beanToCsv.write(categories);
         }
@@ -61,7 +66,7 @@ public class CategoryServiceImpl implements CategoryService {
                     .build();
             List<Category> categories = new ArrayList<>();
             csvToBean.forEach(categories::add);
-            categories.forEach(categoryRepository::create);
+            categoryRepository.saveAll(categories);
             return modelAndView;
         }
     }
@@ -69,26 +74,32 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public ModelAndView create(Category category) {
-        categoryRepository.create(category);
+        categoryRepository.save(category);
         return new ModelAndView(PagesPaths.CATEGORY_PAGE);
     }
 
     @Override
-    public ModelAndView read() {
+    public ModelAndView read(PagingParams params) {
+        if (params.getPageNumber() < 0) {
+            params.setPageNumber(0);
+        }
         ModelAndView modelAndView = new ModelAndView(PagesPaths.HOME_PAGE);
-        modelAndView.addObject(RequestAttributesNames.CATEGORIES, categoryRepository.read());
+        Pageable paging = PageRequest.of(params.getPageNumber(), params.getPageSize(), Sort.by("name").ascending());
+        modelAndView.addObject(RequestAttributesNames.CATEGORIES, categoryRepository.findAll(paging).getContent());
         return modelAndView;
     }
 
     @Override
     @Transactional
-    public Category update(Category category) {
-        return categoryRepository.update(category);
+    public Category update(Category category) throws NoResourceFoundException {
+        categoryRepository.findById(category.getId()).orElseThrow(() ->
+                new NoResourceFoundException("No category with id " + category.getId() + " found"));
+        return categoryRepository.save(category);
     }
 
     @Override
     @Transactional
     public void delete(int id) {
-        categoryRepository.delete(id);
+        categoryRepository.deleteById(id);
     }
 }

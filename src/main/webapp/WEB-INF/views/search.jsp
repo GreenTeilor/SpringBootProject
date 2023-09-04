@@ -6,11 +6,13 @@
     <title>Поиск</title>
     <jsp:include page="dependencies.jsp"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="<c:url value="/style/pagination.css"/>" rel="stylesheet">
     <link href="<c:url value="/style/search.css"/>" rel="stylesheet">
     <link href="<c:url value="/style/common.css"/>" rel="stylesheet">
 </head>
 <body>
 <jsp:include page="header.jsp"/>
+<c:set var="user" value="${sessionScope.searchCriteria}"/>
 <form class="well form-inline search-form" method="POST" action="<c:url value="/search"/>">
     <input type="text" name="keyWords" id="keyWords" class="span3" placeholder="Поиск">
     <button type="submit" class="btn btn-primary">Найти</button>
@@ -22,14 +24,15 @@
                 <div class="items-group main-text">
                     Фильтр
                 </div>
-                <form method="POST" action="#">
+                <form method="POST" action="<c:url value="/search/setFilter"/>">
                     <div class="items-group">
                         <div>
-                            <label for="categories">Категория</label>
+                            <label for="category">Категория</label>
                         </div>
-                        <select id="categories" name="categories">
+                        <select id="category" name="category">
                             <c:forEach items="${categories}" var="category">
-                                <option value="${category.getName()}">${category.getName()}</option>
+                                <option name="searchCategory"
+                                        value="${category.getName()}">${category.getName()}</option>
                             </c:forEach>
                         </select>
                     </div>
@@ -37,14 +40,19 @@
                         <div>
                             Цена
                         </div>
-                        <input type="text" placeholder="От">
-                        <input type="text" placeholder="До">
+                        <input id="priceFrom" name="priceFrom" type="text" placeholder="От">
+                        <input id="priceTo" name="priceTo" type="text" placeholder="До">
                         <div>
                             <button class="btn btn-primary">Применить</button>
                         </div>
                     </div>
                 </form>
-
+                <c:if test="${searchCriteria.getSearchCategory() != null || searchCriteria.getPriceFrom() != null || searchCriteria.getPriceTo() != null}">
+                    <div class="filter_reset">
+                        <a class="btn btn-primary" href="<c:url value="/search/resetFilter"/>">Сбросить</a>
+                        <span style="color: green;">Активирован</span>
+                    </div>
+                </c:if>
             </div>
         </div>
         <div class="col-md-7 d-flex justify-content-center align-items-center">
@@ -71,15 +79,30 @@
                         </div>
                     </c:forEach>
                 </div>
-                <nav class="pagination-nav">
-                    <ul class="pagination">
-                        <li class="page-item"><a class="page-link" href="<c:url value="/search/prev"/>"><<</a></li>
-                        <li class="page-item"><a class="page-link" href="<c:url value="/search/1"/>">1</a></li>
-                        <li class="page-item"><a class="page-link" href="<c:url value="/search/2"/>">2</a></li>
-                        <li class="page-item"><a class="page-link" href="<c:url value="/search/3"/>">3</a></li>
-                        <li class="page-item"><a class="page-link" href="<c:url value="/search/next"/>">>></a></li>
-                    </ul>
-                </nav>
+                <div class="pagination-management">
+                    <nav class="pagination-nav">
+                        <ul class="pagination">
+                            <li class="page-item"><a class="page-link" href="<c:url value="/search/prev"/>"><<</a></li>
+                            <li class="page-item"><a class="page-link" href="<c:url value="/search/0"/>">1</a></li>
+                            <li class="page-item"><a class="page-link" href="<c:url value="/search/1"/>">2</a></li>
+                            <li class="page-item"><a class="page-link" href="<c:url value="/search/2"/>">3</a></li>
+                            <li class="page-item"><a class="page-link" href="<c:url value="/search/next"/>">>></a></li>
+                        </ul>
+                    </nav>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                                data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                            Размер
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <c:forEach begin="1" end="9" var="pageSize">
+                                <a class="dropdown-item"
+                                   href="<c:url value="/search/pageSize/${pageSize}"/>">${pageSize}</a>
+                            </c:forEach>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

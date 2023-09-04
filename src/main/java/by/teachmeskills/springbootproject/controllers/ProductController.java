@@ -1,5 +1,6 @@
 package by.teachmeskills.springbootproject.controllers;
 
+import by.teachmeskills.springbootproject.exceptions.NoResourceFoundException;
 import by.teachmeskills.springbootproject.services.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -15,7 +16,7 @@ public class ProductController {
     private final ProductService service;
 
     @GetMapping("/{id}")
-    public ModelAndView openProductPage(@PathVariable int id) {
+    public ModelAndView openProductPage(@PathVariable int id) throws NoResourceFoundException {
         return service.getProductById(id);
     }
 

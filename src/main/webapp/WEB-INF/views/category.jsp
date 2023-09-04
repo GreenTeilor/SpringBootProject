@@ -7,6 +7,7 @@
     <title>${categoryName}</title>
     <jsp:include page="dependencies.jsp"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="<c:url value="/style/pagination.css"/>" rel="stylesheet">
     <link href="<c:url value="/style/common.css"/>" rel="stylesheet">
     <link href="<c:url value="/style/category.css"/>" rel="stylesheet">
 </head>
@@ -45,6 +46,28 @@
                 </div>
             </div>
         </c:forEach>
+    </div>
+</div>
+<div class="pagination-management">
+    <nav class="pagination-nav">
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="<c:url value="/categories/${categoryName}/prev"/>"><<</a></li>
+            <li class="page-item"><a class="page-link" href="<c:url value="/categories/${categoryName}/0"/>">1</a></li>
+            <li class="page-item"><a class="page-link" href="<c:url value="/categories/${categoryName}/1"/>">2</a></li>
+            <li class="page-item"><a class="page-link" href="<c:url value="/categories/${categoryName}/2"/>">3</a></li>
+            <li class="page-item"><a class="page-link" href="<c:url value="/categories/${categoryName}/next"/>">>></a></li>
+        </ul>
+    </nav>
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+            Размер
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <c:forEach begin="1" end="9" var="pageSize">
+                <a class="dropdown-item" href="<c:url value="/categories/${categoryName}/pageSize/${pageSize}"/>">${pageSize}</a>
+            </c:forEach>
+        </div>
     </div>
 </div>
 </body>

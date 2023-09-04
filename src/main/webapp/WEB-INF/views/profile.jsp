@@ -6,8 +6,9 @@
     <title>Профиль</title>
     <jsp:include page="dependencies.jsp"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="style/common.css" rel="stylesheet">
-    <link href="style/profile.css" rel="stylesheet">
+    <link href="<c:url value="/style/pagination.css"/>" rel="stylesheet">
+    <link href="<c:url value="/style/common.css"/>" rel="stylesheet">
+    <link href="<c:url value="/style/profile.css"/>" rel="stylesheet">
 </head>
 <body>
 <jsp:include page="header.jsp"/>
@@ -51,7 +52,7 @@
                                     </div>
                                 </c:when>
                                 <c:otherwise>
-                                    <form method="POST" action="profile">
+                                    <form method="POST" action="<c:url value="/profile"/>">
                                         <div class="media">
                                             <label for="address">Адрес</label>
                                             <div>
@@ -79,7 +80,7 @@
             </div>
             <div class="col-lg-6 justify-content-center d-flex">
                 <div class="about-avatar">
-                    <img src="assets/avatar.png" title="avatar" alt="avatar">
+                    <img src="<c:url value="/assets/avatar.png"/>" title="avatar" alt="avatar">
                 </div>
             </div>
         </div>
@@ -148,8 +149,8 @@
                 <c:forEach items="${order.getProducts()}" var="product">
                     <div style="display: inline-block;">
                         <div class="card" style="width: 15rem; margin: 20px; background-color: #dee2e6">
-                            <a href="products/${product.getId()}"><img
-                                    src="${product.getImagePath()}"
+                            <a href="<c:url value="/products/${product.getId()}"/>"><img
+                                    src="<c:url value="/${product.getImagePath()}"/>"
                                     class="card-img-top"
                                     style="height: 17rem;"
                                     alt="..."></a>
@@ -157,7 +158,7 @@
                                 <h2 class="card-title" style="font-size: 1rem;">${product.getName()}</h2>
                                 <p class="card-text">Цена: <fmt:formatNumber value="${product.getPrice()}"
                                                                              type="currency"/><br></p>
-                                <a href="products/${product.getId()}" class="btn btn-primary">Посмотреть</a>
+                                <a href="<c:url value="/products/${product.getId()}"/>" class="btn btn-primary">Посмотреть</a>
                             </div>
                         </div>
                     </div>
@@ -167,6 +168,28 @@
     </c:forEach>
 
 </section>
+<div class="pagination-management">
+    <nav class="pagination-nav">
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="<c:url value="/profile/prev"/>"><<</a></li>
+            <li class="page-item"><a class="page-link" href="<c:url value="/profile/0"/>">1</a></li>
+            <li class="page-item"><a class="page-link" href="<c:url value="/profile/1"/>">2</a></li>
+            <li class="page-item"><a class="page-link" href="<c:url value="/profile/2"/>">3</a></li>
+            <li class="page-item"><a class="page-link" href="<c:url value="/profile/next"/>">>></a></li>
+        </ul>
+    </nav>
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+            Размер
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <c:forEach begin="1" end="9" var="pageSize">
+                <a class="dropdown-item" href="<c:url value="/profile/pageSize/${pageSize}"/>">${pageSize}</a>
+            </c:forEach>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
