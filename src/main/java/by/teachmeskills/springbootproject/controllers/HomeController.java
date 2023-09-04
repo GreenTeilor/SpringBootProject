@@ -39,13 +39,13 @@ public class HomeController {
         return modelAndView;
     }
 
-    @PostMapping("/saveCategories")
-    public void saveToFile(HttpServletResponse response) throws IOException, CsvRequiredFieldEmptyException, CsvDataTypeMismatchException {
+    @PostMapping("/csv/exportCategories")
+    public void exportCategoriesToCsv(HttpServletResponse response) throws IOException, CsvRequiredFieldEmptyException, CsvDataTypeMismatchException {
         categoryService.saveToFile(response);
     }
 
-    @PostMapping("/loadCategories")
-    public ModelAndView loadFromFile(@RequestParam("file") MultipartFile file) throws IOException {
+    @PostMapping("/csv/importCategories")
+    public ModelAndView importCategoriesFromCsv(@RequestParam("file") MultipartFile file) throws IOException {
         return categoryService.loadFromFile(file);
     }
 

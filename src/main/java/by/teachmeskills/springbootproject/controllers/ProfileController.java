@@ -46,14 +46,14 @@ public class ProfileController {
         return userService.addAddressAndPhoneNumberInfo(user.getAddress(), user.getPhoneNumber(), userInSession, bindingResult, params);
     }
 
-    @PostMapping("/saveOrders")
-    public void saveOrdersToFile(@SessionAttribute(SessionAttributesNames.USER) User user,
+    @PostMapping("/csv/exportOrders")
+    public void exportOrdersToCsv(@SessionAttribute(SessionAttributesNames.USER) User user,
                                  HttpServletResponse response) throws CsvRequiredFieldEmptyException, CsvDataTypeMismatchException, IOException {
         userService.saveOrdersToFile(user.getId(), response);
     }
 
-    @PostMapping("/loadOrders")
-    public ModelAndView loadOrdersFromFile(@SessionAttribute(SessionAttributesNames.USER) User user,
+    @PostMapping("/csv/importOrders")
+    public ModelAndView importOrdersFromCsv(@SessionAttribute(SessionAttributesNames.USER) User user,
                                            @RequestParam("file") MultipartFile file)
             throws IOException {
         return userService.loadOrdersFromFile(user, file);

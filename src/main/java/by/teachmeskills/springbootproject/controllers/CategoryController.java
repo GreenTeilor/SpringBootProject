@@ -36,14 +36,14 @@ public class CategoryController {
         return modelAndView;
     }
 
-    @PostMapping("/saveProducts")
-    public void saveProductsToFile(@RequestParam(RequestAttributesNames.CATEGORY_NAME) String categoryName,
+    @PostMapping("/csv/exportProducts")
+    public void exportProductsToCsv(@RequestParam(RequestAttributesNames.CATEGORY_NAME) String categoryName,
                                    HttpServletResponse response) throws IOException, CsvRequiredFieldEmptyException, CsvDataTypeMismatchException {
         productService.saveToFile(categoryName, response);
     }
 
-    @PostMapping ("/loadProducts")
-    public ModelAndView loadProductsFromFile(@RequestParam(RequestAttributesNames.CATEGORY_NAME) String categoryName,
+    @PostMapping ("/csv/importProducts")
+    public ModelAndView importProductsFromCsv(@RequestParam(RequestAttributesNames.CATEGORY_NAME) String categoryName,
                                              @RequestParam("file") MultipartFile file) throws IOException {
         return productService.loadFromFile(categoryName, file);
     }
