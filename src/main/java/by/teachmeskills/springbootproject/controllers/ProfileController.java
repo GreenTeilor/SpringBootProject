@@ -1,6 +1,8 @@
 package by.teachmeskills.springbootproject.controllers;
 
+import by.teachmeskills.springbootproject.constants.RequestAttributesNames;
 import by.teachmeskills.springbootproject.constants.SessionAttributesNames;
+import by.teachmeskills.springbootproject.constants.Values;
 import by.teachmeskills.springbootproject.entities.PagingParams;
 import by.teachmeskills.springbootproject.entities.User;
 import by.teachmeskills.springbootproject.services.UserService;
@@ -13,7 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,7 +36,6 @@ public class ProfileController {
     @GetMapping
     public ModelAndView openProfilePage(@SessionAttribute(SessionAttributesNames.USER) User user,
                                         @ModelAttribute(SessionAttributesNames.ORDER_PAGING_PARAMS) PagingParams params) {
-        params.setPageNumber(0);
         return userService.getUserInfo(user, params);
     }
 
@@ -54,45 +54,19 @@ public class ProfileController {
 
     @PostMapping("/csv/importOrders")
     public ModelAndView importOrdersFromCsv(@SessionAttribute(SessionAttributesNames.USER) User user,
-                                           @RequestParam("file") MultipartFile file)
-            throws IOException {
+                                           @RequestParam(RequestAttributesNames.FILE) MultipartFile file) throws IOException {
         return userService.loadOrdersFromFile(user, file);
     }
 
-    @GetMapping("/next")
-    public ModelAndView findPagedNext(@SessionAttribute(SessionAttributesNames.USER) User user,
+    @GetMapping("/paging")
+    public ModelAndView changePagingParams(@SessionAttribute(SessionAttributesNames.USER) User user,
                                       @ModelAttribute(SessionAttributesNames.ORDER_PAGING_PARAMS) PagingParams params) {
-        params.setPageNumber(params.getPageNumber() + 1);
-        return userService.getUserInfo(user, params);
-    }
-
-    @GetMapping("/prev")
-    public ModelAndView findPagedPrev(@SessionAttribute(SessionAttributesNames.USER) User user,
-                                      @ModelAttribute(SessionAttributesNames.ORDER_PAGING_PARAMS) PagingParams params) {
-        params.setPageNumber(params.getPageNumber() - 1);
-        return userService.getUserInfo(user, params);
-    }
-
-    @GetMapping("/{pageNumber}")
-    public ModelAndView findPagedNumber(@PathVariable int pageNumber,
-                                        @SessionAttribute(SessionAttributesNames.USER) User user,
-                                        @ModelAttribute(SessionAttributesNames.ORDER_PAGING_PARAMS) PagingParams params) {
-        params.setPageNumber(pageNumber);
-        return userService.getUserInfo(user, params);
-    }
-
-    @GetMapping("/pageSize/{pageSize}")
-    public ModelAndView setPageSize(@PathVariable int pageSize,
-                                    @SessionAttribute(SessionAttributesNames.USER) User user,
-                                    @ModelAttribute(SessionAttributesNames.ORDER_PAGING_PARAMS) PagingParams params) {
-        params.setPageSize(pageSize);
-        params.setPageNumber(0);
         return userService.getUserInfo(user, params);
     }
 
     @ModelAttribute(SessionAttributesNames.ORDER_PAGING_PARAMS)
     public PagingParams initializePagingParams() {
-        return new PagingParams(0, 3);
+        return new PagingParams(Values.DEFAULT_START_PAGE, Values.DEFAULT_PAGE_SIZE);
     }
 
 }

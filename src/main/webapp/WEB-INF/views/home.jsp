@@ -15,10 +15,10 @@
     <jsp:include page="info.jsp"/>
 </c:if>
 <div class="files">
-    <form method="POST" action="<c:url value="/home/saveCategories"/>">
+    <form method="POST" action="<c:url value="/home/csv/exportCategories"/>">
         <button type="submit" class="btn btn-primary">Экспорт категорий</button>
     </form>
-    <form method="POST" action="<c:url value="/home/loadCategories"/>" enctype="multipart/form-data"
+    <form method="POST" action="<c:url value="/home/csv/importCategories"/>" enctype="multipart/form-data"
           class="file-import">
         <label class="label">
             <i>&#128204</i>
@@ -46,14 +46,15 @@
         </c:forEach>
     </div>
 </div>
+<c:set var="params" value="${categoryPagingParams}"/>
 <div class="pagination-management">
     <nav class="pagination-nav">
         <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="<c:url value="/home/prev"/>"><<</a></li>
-            <li class="page-item"><a class="page-link" href="<c:url value="/home/0"/>">1</a></li>
-            <li class="page-item"><a class="page-link" href="<c:url value="/home/1"/>">2</a></li>
-            <li class="page-item"><a class="page-link" href="<c:url value="/home/2"/>">3</a></li>
-            <li class="page-item"><a class="page-link" href="<c:url value="/home/next"/>">>></a></li>
+            <li class="page-item"><a class="page-link" href="<c:url value="/home/paging?pageNumber=${params.getPageNumber() - 1}"/>"><<</a></li>
+            <li class="page-item"><a class="page-link" href="<c:url value="/home/paging?pageNumber=0"/>">1</a></li>
+            <li class="page-item"><a class="page-link" href="<c:url value="/home/paging?pageNumber=1"/>">2</a></li>
+            <li class="page-item"><a class="page-link" href="<c:url value="/home/paging?pageNumber=2"/>">3</a></li>
+            <li class="page-item"><a class="page-link" href="<c:url value="/home/paging?pageNumber=${params.getPageNumber() + 1}"/>">>></a></li>
         </ul>
     </nav>
     <div class="dropdown">
@@ -63,7 +64,7 @@
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <c:forEach begin="1" end="9" var="pageSize">
-                <a class="dropdown-item" href="<c:url value="/home/pageSize/${pageSize}"/>">${pageSize}</a>
+                <a class="dropdown-item" href="<c:url value="/home/paging?pageSize=${pageSize}"/>">${pageSize}</a>
             </c:forEach>
         </div>
     </div>

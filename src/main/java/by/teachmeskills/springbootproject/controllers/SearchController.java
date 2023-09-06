@@ -1,13 +1,13 @@
 package by.teachmeskills.springbootproject.controllers;
 
 import by.teachmeskills.springbootproject.constants.SessionAttributesNames;
+import by.teachmeskills.springbootproject.constants.Values;
 import by.teachmeskills.springbootproject.entities.SearchCriteria;
 import by.teachmeskills.springbootproject.services.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,51 +23,24 @@ public class SearchController {
 
     @GetMapping
     public ModelAndView openSearchPage(@ModelAttribute(SessionAttributesNames.SEARCH_CRITERIA) SearchCriteria searchCriteria) {
-        searchCriteria.setKeyWords("");
-        searchCriteria.setPageNumber(0);
-        searchCriteria.setPageSize(3);
         return productService.findProducts(searchCriteria);
     }
 
     @PostMapping
     public ModelAndView search(@RequestParam String keyWords, @ModelAttribute(SessionAttributesNames.SEARCH_CRITERIA) SearchCriteria searchCriteria) {
         searchCriteria.setKeyWords(keyWords);
-        searchCriteria.setPageNumber(0);
+        searchCriteria.setPageNumber(Values.DEFAULT_START_PAGE);
         return productService.findProducts(searchCriteria);
     }
 
-    @GetMapping("/next")
-    public ModelAndView findPagedNext(@ModelAttribute(SessionAttributesNames.SEARCH_CRITERIA) SearchCriteria searchCriteria) {
-        searchCriteria.setPageNumber(searchCriteria.getPageNumber() + 1);
-        return productService.findProducts(searchCriteria);
-    }
-
-    @GetMapping("/prev")
-    public ModelAndView findPagedPrev(@ModelAttribute(SessionAttributesNames.SEARCH_CRITERIA) SearchCriteria searchCriteria) {
-        searchCriteria.setPageNumber(searchCriteria.getPageNumber() - 1);
-        return productService.findProducts(searchCriteria);
-    }
-
-    @GetMapping("/{pageNumber}")
-    public ModelAndView findPagedNumber(@PathVariable int pageNumber, @ModelAttribute(SessionAttributesNames.SEARCH_CRITERIA) SearchCriteria searchCriteria) {
-        searchCriteria.setPageNumber(pageNumber);
-        return productService.findProducts(searchCriteria);
-    }
-
-    @GetMapping("/pageSize/{pageSize}")
-    public ModelAndView setPageSize(@PathVariable int pageSize,
-                                    @ModelAttribute(SessionAttributesNames.SEARCH_CRITERIA) SearchCriteria searchCriteria) {
-        searchCriteria.setPageSize(pageSize);
-        searchCriteria.setPageNumber(0);
+    @GetMapping("/paging")
+    public ModelAndView changePagingParams(@ModelAttribute(SessionAttributesNames.SEARCH_CRITERIA) SearchCriteria searchCriteria) {
         return productService.findProducts(searchCriteria);
     }
 
     @PostMapping("setFilter")
-    public ModelAndView setFilter(@ModelAttribute(SessionAttributesNames.SEARCH_CRITERIA) SearchCriteria searchCriteria,
-                                  @RequestParam(required = false) String category,
-                                  @RequestParam(required = false) Integer priceFrom,
-                                  @RequestParam(required = false) Integer priceTo) {
-        return productService.changeFilter(searchCriteria, category, priceFrom, priceTo);
+    public ModelAndView setFilter(@ModelAttribute(SessionAttributesNames.SEARCH_CRITERIA) SearchCriteria searchCriteria) {
+        return productService.changeFilter(searchCriteria, searchCriteria.getSearchCategory(), searchCriteria.getPriceFrom(), searchCriteria.getPriceTo());
     }
 
     @GetMapping("resetFilter")
@@ -77,6 +50,10 @@ public class SearchController {
 
     @ModelAttribute(SessionAttributesNames.SEARCH_CRITERIA)
     public SearchCriteria initializeSearchCriteria() {
-        return new SearchCriteria();
+        return SearchCriteria.builder().
+                pageNumber(Values.DEFAULT_START_PAGE).
+                pageSize(Values.DEFAULT_PAGE_SIZE).
+                keyWords("").
+                build();
     }
 }

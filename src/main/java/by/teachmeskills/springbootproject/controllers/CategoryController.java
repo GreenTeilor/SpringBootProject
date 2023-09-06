@@ -2,6 +2,7 @@ package by.teachmeskills.springbootproject.controllers;
 
 import by.teachmeskills.springbootproject.constants.RequestAttributesNames;
 import by.teachmeskills.springbootproject.constants.SessionAttributesNames;
+import by.teachmeskills.springbootproject.constants.Values;
 import by.teachmeskills.springbootproject.entities.PagingParams;
 import by.teachmeskills.springbootproject.services.ProductService;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
@@ -27,12 +28,11 @@ import java.io.IOException;
 public class CategoryController {
     private final ProductService productService;
 
-    @GetMapping("/{name}")
-    public ModelAndView openCategory(@PathVariable String name,
+    @GetMapping("/{categoryName}")
+    public ModelAndView openCategory(@PathVariable String categoryName,
                                      @ModelAttribute(SessionAttributesNames.PRODUCT_PAGING_PARAMS) PagingParams params) {
-        params.setPageNumber(0);
-        ModelAndView modelAndView = productService.getCategoryProducts(name, params);
-        modelAndView.addObject(RequestAttributesNames.CATEGORY_NAME, name);
+        ModelAndView modelAndView = productService.getCategoryProducts(categoryName, params);
+        modelAndView.addObject(RequestAttributesNames.CATEGORY_NAME, categoryName);
         return modelAndView;
     }
 
@@ -44,43 +44,18 @@ public class CategoryController {
 
     @PostMapping ("/csv/importProducts")
     public ModelAndView importProductsFromCsv(@RequestParam(RequestAttributesNames.CATEGORY_NAME) String categoryName,
-                                             @RequestParam("file") MultipartFile file) throws IOException {
+                                             @RequestParam(RequestAttributesNames.FILE) MultipartFile file) throws IOException {
         return productService.loadFromFile(categoryName, file);
     }
 
-    @GetMapping("/{name}/next")
-    public ModelAndView findPagedNext(@PathVariable String name,
+    @GetMapping("/{categoryName}/paging")
+    public ModelAndView changePagingParams(@PathVariable String categoryName,
                                       @ModelAttribute(SessionAttributesNames.PRODUCT_PAGING_PARAMS) PagingParams params) {
-        params.setPageNumber(params.getPageNumber() + 1);
-        return productService.getCategoryProducts(name, params);
-    }
-
-    @GetMapping("/{name}/prev")
-    public ModelAndView findPagedPrev(@PathVariable String name,
-                                      @ModelAttribute(SessionAttributesNames.PRODUCT_PAGING_PARAMS) PagingParams params) {
-        params.setPageNumber(params.getPageNumber() - 1);
-        return productService.getCategoryProducts(name, params);
-    }
-
-    @GetMapping("/{name}/{pageNumber}")
-    public ModelAndView findPagedNumber(@PathVariable String name,
-                                        @PathVariable int pageNumber,
-                                        @ModelAttribute(SessionAttributesNames.PRODUCT_PAGING_PARAMS) PagingParams params) {
-        params.setPageNumber(pageNumber);
-        return productService.getCategoryProducts(name, params);
-    }
-
-    @GetMapping("/{name}/pageSize/{pageSize}")
-    public ModelAndView setPageSize(@PathVariable String name,
-                                    @PathVariable int pageSize,
-                                    @ModelAttribute(SessionAttributesNames.PRODUCT_PAGING_PARAMS) PagingParams params) {
-        params.setPageSize(pageSize);
-        params.setPageNumber(0);
-        return productService.getCategoryProducts(name, params);
+        return productService.getCategoryProducts(categoryName, params);
     }
 
     @ModelAttribute(SessionAttributesNames.PRODUCT_PAGING_PARAMS)
     public PagingParams initializePagingParams() {
-        return new PagingParams(0, 3);
+        return new PagingParams(Values.DEFAULT_START_PAGE, Values.DEFAULT_PAGE_SIZE);
     }
 }

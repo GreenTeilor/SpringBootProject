@@ -14,11 +14,11 @@
 <body>
 <jsp:include page="header.jsp"/>
 <div class="files">
-    <form method="POST" action="<c:url value="/categories/saveProducts"/>">
+    <form method="POST" action="<c:url value="/categories/csv/exportProducts"/>">
         <input id="categoryNameSave" name="categoryName" value="${categoryName}" hidden>
         <button type="submit" class="btn btn-primary">Экспорт продуктов</button>
     </form>
-    <form method="POST" action="<c:url value="/categories/loadProducts"/>" enctype="multipart/form-data" class="file-import">
+    <form method="POST" action="<c:url value="/categories/csv/importProducts"/>" enctype="multipart/form-data" class="file-import">
         <input id="categoryNameLoad" name="categoryName" value="${categoryName}" hidden>
         <label class="label">
             <i>&#128204</i>
@@ -48,14 +48,15 @@
         </c:forEach>
     </div>
 </div>
+<c:set var="params" value="${productPagingParams}"/>
 <div class="pagination-management">
     <nav class="pagination-nav">
         <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="<c:url value="/categories/${categoryName}/prev"/>"><<</a></li>
-            <li class="page-item"><a class="page-link" href="<c:url value="/categories/${categoryName}/0"/>">1</a></li>
-            <li class="page-item"><a class="page-link" href="<c:url value="/categories/${categoryName}/1"/>">2</a></li>
-            <li class="page-item"><a class="page-link" href="<c:url value="/categories/${categoryName}/2"/>">3</a></li>
-            <li class="page-item"><a class="page-link" href="<c:url value="/categories/${categoryName}/next"/>">>></a></li>
+            <li class="page-item"><a class="page-link" href="<c:url value="/categories/${categoryName}/paging?pageNumber=${params.getPageNumber() - 1}"/>"><<</a></li>
+            <li class="page-item"><a class="page-link" href="<c:url value="/categories/${categoryName}/paging?pageNumber=0"/>">1</a></li>
+            <li class="page-item"><a class="page-link" href="<c:url value="/categories/${categoryName}/paging?pageNumber=1"/>">2</a></li>
+            <li class="page-item"><a class="page-link" href="<c:url value="/categories/${categoryName}/paging?pageNumber=2"/>">3</a></li>
+            <li class="page-item"><a class="page-link" href="<c:url value="/categories/${categoryName}/paging?pageNumber=${params.getPageNumber() + 1}"/>">>></a></li>
         </ul>
     </nav>
     <div class="dropdown">
@@ -65,7 +66,7 @@
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <c:forEach begin="1" end="9" var="pageSize">
-                <a class="dropdown-item" href="<c:url value="/categories/${categoryName}/pageSize/${pageSize}"/>">${pageSize}</a>
+                <a class="dropdown-item" href="<c:url value="/categories/${categoryName}/paging?pageSize=${pageSize}"/>">${pageSize}</a>
             </c:forEach>
         </div>
     </div>

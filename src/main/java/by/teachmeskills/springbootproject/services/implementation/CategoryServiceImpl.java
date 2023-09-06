@@ -2,6 +2,7 @@ package by.teachmeskills.springbootproject.services.implementation;
 
 import by.teachmeskills.springbootproject.constants.PagesPaths;
 import by.teachmeskills.springbootproject.constants.RequestAttributesNames;
+import by.teachmeskills.springbootproject.constants.Values;
 import by.teachmeskills.springbootproject.entities.Category;
 import by.teachmeskills.springbootproject.entities.PagingParams;
 import by.teachmeskills.springbootproject.exceptions.NoResourceFoundException;
@@ -81,7 +82,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public ModelAndView read(PagingParams params) {
         if (params.getPageNumber() < 0) {
-            params.setPageNumber(0);
+            params.setPageNumber(Values.DEFAULT_START_PAGE);
         }
         ModelAndView modelAndView = new ModelAndView(PagesPaths.HOME_PAGE);
         Pageable paging = PageRequest.of(params.getPageNumber(), params.getPageSize(), Sort.by("name").ascending());

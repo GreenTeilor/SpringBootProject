@@ -27,11 +27,11 @@
                 <form method="POST" action="<c:url value="/search/setFilter"/>">
                     <div class="items-group">
                         <div>
-                            <label for="category">Категория</label>
+                            <label for="searchCategory">Категория</label>
                         </div>
-                        <select id="category" name="category">
+                        <select id="searchCategory" name="searchCategory">
                             <c:forEach items="${categories}" var="category">
-                                <option name="searchCategory"
+                                <option name="category" <c:if test="${searchCriteria.getSearchCategory().equals(category.getName())}">selected</c:if>
                                         value="${category.getName()}">${category.getName()}</option>
                             </c:forEach>
                         </select>
@@ -40,8 +40,8 @@
                         <div>
                             Цена
                         </div>
-                        <input id="priceFrom" name="priceFrom" type="text" placeholder="От">
-                        <input id="priceTo" name="priceTo" type="text" placeholder="До">
+                        <input id="priceFrom" name="priceFrom" type="text" placeholder="От" <c:if test="${searchCriteria.getPriceFrom() != null}">value="${searchCriteria.getPriceFrom()}"</c:if>>
+                        <input id="priceTo" name="priceTo" type="text" placeholder="До" <c:if test="${searchCriteria.getPriceTo() != null}">value="${searchCriteria.getPriceTo()}"</c:if>>
                         <div>
                             <button class="btn btn-primary">Применить</button>
                         </div>
@@ -79,14 +79,15 @@
                         </div>
                     </c:forEach>
                 </div>
+                <c:set var="params" value="${searchCriteria}"/>
                 <div class="pagination-management">
                     <nav class="pagination-nav">
                         <ul class="pagination">
-                            <li class="page-item"><a class="page-link" href="<c:url value="/search/prev"/>"><<</a></li>
-                            <li class="page-item"><a class="page-link" href="<c:url value="/search/0"/>">1</a></li>
-                            <li class="page-item"><a class="page-link" href="<c:url value="/search/1"/>">2</a></li>
-                            <li class="page-item"><a class="page-link" href="<c:url value="/search/2"/>">3</a></li>
-                            <li class="page-item"><a class="page-link" href="<c:url value="/search/next"/>">>></a></li>
+                            <li class="page-item"><a class="page-link" href="<c:url value="/search/paging?pageNumber=${params.getPageNumber() - 1}"/>"><<</a></li>
+                            <li class="page-item"><a class="page-link" href="<c:url value="/search/paging?pageNumber=0"/>">1</a></li>
+                            <li class="page-item"><a class="page-link" href="<c:url value="/search/paging?pageNumber=1"/>">2</a></li>
+                            <li class="page-item"><a class="page-link" href="<c:url value="/search/paging?pageNumber=2"/>">3</a></li>
+                            <li class="page-item"><a class="page-link" href="<c:url value="/search/paging?pageNumber=${params.getPageNumber() + 1}"/>">>></a></li>
                         </ul>
                     </nav>
                     <div class="dropdown">
@@ -98,7 +99,7 @@
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <c:forEach begin="1" end="9" var="pageSize">
                                 <a class="dropdown-item"
-                                   href="<c:url value="/search/pageSize/${pageSize}"/>">${pageSize}</a>
+                                   href="<c:url value="/search/paging?pageSize=${pageSize}"/>">${pageSize}</a>
                             </c:forEach>
                         </div>
                     </div>

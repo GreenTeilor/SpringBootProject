@@ -2,6 +2,7 @@ package by.teachmeskills.springbootproject.services.implementation;
 
 import by.teachmeskills.springbootproject.constants.PagesPaths;
 import by.teachmeskills.springbootproject.constants.RequestAttributesNames;
+import by.teachmeskills.springbootproject.constants.Values;
 import by.teachmeskills.springbootproject.csv.ProductCsv;
 import by.teachmeskills.springbootproject.csv.converters.ProductConverter;
 import by.teachmeskills.springbootproject.entities.Cart;
@@ -37,6 +38,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,7 +74,7 @@ public class ProductServiceImpl implements ProductService {
     public ModelAndView findProducts(SearchCriteria searchCriteria) {
         ModelAndView modelAndView = new ModelAndView(PagesPaths.SEARCH_PAGE);
         if (searchCriteria.getPageNumber() < 0) {
-            searchCriteria.setPageNumber(0);
+            searchCriteria.setPageNumber(Values.DEFAULT_START_PAGE);
         }
         Pageable paging = PageRequest.of(searchCriteria.getPageNumber(), searchCriteria.getPageSize(), Sort.by("name").ascending());
         Specification<Product> specification = new ProductSearchSpecification(searchCriteria);
@@ -91,12 +93,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ModelAndView changeFilter(SearchCriteria searchCriteria, String categoryName, Integer priceFrom, Integer priceTo) {
+    public ModelAndView changeFilter(SearchCriteria searchCriteria, String categoryName, BigDecimal priceFrom, BigDecimal priceTo) {
         searchCriteria.setKeyWords("");
         searchCriteria.setSearchCategory(categoryName);
         searchCriteria.setPriceFrom(priceFrom);
         searchCriteria.setPriceTo(priceTo);
-        searchCriteria.setPageNumber(0);
+        searchCriteria.setPageNumber(Values.DEFAULT_START_PAGE);
         return findProducts(searchCriteria);
     }
 
