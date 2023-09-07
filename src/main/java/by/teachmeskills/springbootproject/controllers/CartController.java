@@ -7,6 +7,7 @@ import by.teachmeskills.springbootproject.entities.Cart;
 import by.teachmeskills.springbootproject.entities.User;
 import by.teachmeskills.springbootproject.exceptions.InsufficientFundsException;
 import by.teachmeskills.springbootproject.exceptions.NoProductsInOrderException;
+import by.teachmeskills.springbootproject.exceptions.NoResourceFoundException;
 import by.teachmeskills.springbootproject.exceptions.UserAlreadyExistsException;
 import by.teachmeskills.springbootproject.services.ProductService;
 import by.teachmeskills.springbootproject.services.UserService;
@@ -37,7 +38,7 @@ public class CartController {
     }
 
     @GetMapping("/addProduct/{id}")
-    public ModelAndView addProduct(@PathVariable int id, @ModelAttribute(SessionAttributesNames.CART) Cart cart) {
+    public ModelAndView addProduct(@PathVariable int id, @ModelAttribute(SessionAttributesNames.CART) Cart cart) throws NoResourceFoundException {
         return productService.addProductToCart(id, cart);
     }
 
@@ -59,7 +60,7 @@ public class CartController {
 
 
     @GetMapping("/makeOrder")
-    public ModelAndView makeOrder(@SessionAttribute(SessionAttributesNames.USER) User user, @ModelAttribute(SessionAttributesNames.CART) Cart cart) throws InsufficientFundsException, UserAlreadyExistsException, NoProductsInOrderException {
+    public ModelAndView makeOrder(@SessionAttribute(SessionAttributesNames.USER) User user, @ModelAttribute(SessionAttributesNames.CART) Cart cart) throws InsufficientFundsException, NoProductsInOrderException {
         return userService.makeOrder(user, cart);
     }
 

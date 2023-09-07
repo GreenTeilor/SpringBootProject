@@ -1,6 +1,9 @@
 package by.teachmeskills.springbootproject.controllers;
 
 import by.teachmeskills.springbootproject.constants.RequestAttributesNames;
+import by.teachmeskills.springbootproject.constants.SessionAttributesNames;
+import by.teachmeskills.springbootproject.constants.Values;
+import by.teachmeskills.springbootproject.entities.PagingParams;
 import by.teachmeskills.springbootproject.entities.User;
 import by.teachmeskills.springbootproject.services.CategoryService;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
@@ -9,10 +12,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -20,25 +25,37 @@ import java.io.IOException;
 
 @Controller
 @RequestMapping("/home")
+@SessionAttributes(SessionAttributesNames.CATEGORY_PAGING_PARAMS)
 @RequiredArgsConstructor
 public class HomeController {
     private final CategoryService categoryService;
 
     @GetMapping
-    public ModelAndView openHomePage(@SessionAttribute(RequestAttributesNames.USER) User user) {
-        ModelAndView modelAndView = categoryService.read();
+    public ModelAndView openHomePage(@SessionAttribute(SessionAttributesNames.USER) User user,
+                                     @ModelAttribute(SessionAttributesNames.CATEGORY_PAGING_PARAMS) PagingParams params) {
+        ModelAndView modelAndView = categoryService.read(params);
         modelAndView.addObject(RequestAttributesNames.USER, user);
         return modelAndView;
     }
 
-    @PostMapping("/saveCategories")
-    public void saveToFile(HttpServletResponse response) throws IOException, CsvRequiredFieldEmptyException, CsvDataTypeMismatchException {
+    @PostMapping("/csv/exportCategories")
+    public void exportCategoriesToCsv(HttpServletResponse response) throws IOException, CsvRequiredFieldEmptyException, CsvDataTypeMismatchException {
         categoryService.saveToFile(response);
     }
 
-    @PostMapping ("/loadCategories")
-    public ModelAndView loadFromFile(@RequestParam("file") MultipartFile file) throws IOException {
+    @PostMapping("/csv/importCategories")
+    public ModelAndView importCategoriesFromCsv(@RequestParam(RequestAttributesNames.FILE) MultipartFile file) throws IOException {
         return categoryService.loadFromFile(file);
+    }
+
+    @GetMapping("/paging")
+    public ModelAndView changePagingParams(@ModelAttribute(SessionAttributesNames.CATEGORY_PAGING_PARAMS) PagingParams params) {
+        return categoryService.read(params);
+    }
+
+    @ModelAttribute(SessionAttributesNames.CATEGORY_PAGING_PARAMS)
+    public PagingParams initializePagingParams() {
+        return new PagingParams(Values.DEFAULT_START_PAGE, Values.DEFAULT_PAGE_SIZE);
     }
 }
 

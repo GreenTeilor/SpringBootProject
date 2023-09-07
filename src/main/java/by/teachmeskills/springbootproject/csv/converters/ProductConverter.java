@@ -30,7 +30,7 @@ public class ProductConverter {
                 name(p.getName()).
                 description(p.getDescription()).
                 imagePath(p.getImagePath()).
-                category(categoryRepository.getCategoryByName(p.getCategoryName()).orElse(null)).
+                category(categoryRepository.findByName(p.getCategoryName()).orElse(null)).
                 price(p.getPrice()).
                 build()).orElse(null);
     }

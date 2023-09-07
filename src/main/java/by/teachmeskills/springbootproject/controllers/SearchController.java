@@ -1,13 +1,13 @@
 package by.teachmeskills.springbootproject.controllers;
 
 import by.teachmeskills.springbootproject.constants.SessionAttributesNames;
+import by.teachmeskills.springbootproject.constants.Values;
 import by.teachmeskills.springbootproject.entities.SearchCriteria;
 import by.teachmeskills.springbootproject.services.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,38 +23,37 @@ public class SearchController {
 
     @GetMapping
     public ModelAndView openSearchPage(@ModelAttribute(SessionAttributesNames.SEARCH_CRITERIA) SearchCriteria searchCriteria) {
-        searchCriteria.setKeyWords("");
-        searchCriteria.setPaginationNumber(1);
         return productService.findProducts(searchCriteria);
     }
 
     @PostMapping
     public ModelAndView search(@RequestParam String keyWords, @ModelAttribute(SessionAttributesNames.SEARCH_CRITERIA) SearchCriteria searchCriteria) {
         searchCriteria.setKeyWords(keyWords);
-        searchCriteria.setPaginationNumber(1);
+        searchCriteria.setPageNumber(Values.DEFAULT_START_PAGE);
         return productService.findProducts(searchCriteria);
     }
 
-    @GetMapping("/next")
-    public ModelAndView paginationNext(@ModelAttribute(SessionAttributesNames.SEARCH_CRITERIA) SearchCriteria searchCriteria) {
-        searchCriteria.setPaginationNumber(searchCriteria.getPaginationNumber() + 1);
+    @GetMapping("/paging")
+    public ModelAndView changePagingParams(@ModelAttribute(SessionAttributesNames.SEARCH_CRITERIA) SearchCriteria searchCriteria) {
         return productService.findProducts(searchCriteria);
     }
 
-    @GetMapping("/prev")
-    public ModelAndView paginationPrev(@ModelAttribute(SessionAttributesNames.SEARCH_CRITERIA) SearchCriteria searchCriteria) {
-        searchCriteria.setPaginationNumber(searchCriteria.getPaginationNumber() - 1);
-        return productService.findProducts(searchCriteria);
+    @PostMapping("setFilter")
+    public ModelAndView setFilter(@ModelAttribute(SessionAttributesNames.SEARCH_CRITERIA) SearchCriteria searchCriteria) {
+        return productService.changeFilter(searchCriteria, searchCriteria.getSearchCategory(), searchCriteria.getPriceFrom(), searchCriteria.getPriceTo());
     }
 
-    @GetMapping("/{pageNumber}")
-    public ModelAndView paginationPageNumber(@PathVariable int pageNumber, @ModelAttribute(SessionAttributesNames.SEARCH_CRITERIA) SearchCriteria searchCriteria) {
-        searchCriteria.setPaginationNumber(pageNumber);
-        return productService.findProducts(searchCriteria);
+    @GetMapping("resetFilter")
+    public ModelAndView resetFilter(@ModelAttribute(SessionAttributesNames.SEARCH_CRITERIA) SearchCriteria searchCriteria) {
+        return productService.changeFilter(searchCriteria, null, null, null);
     }
 
     @ModelAttribute(SessionAttributesNames.SEARCH_CRITERIA)
     public SearchCriteria initializeSearchCriteria() {
-        return new SearchCriteria();
+        return SearchCriteria.builder().
+                pageNumber(Values.DEFAULT_START_PAGE).
+                pageSize(Values.DEFAULT_PAGE_SIZE).
+                keyWords("").
+                build();
     }
 }

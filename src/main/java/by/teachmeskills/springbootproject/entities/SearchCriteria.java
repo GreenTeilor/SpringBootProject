@@ -1,16 +1,20 @@
 package by.teachmeskills.springbootproject.entities;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+
+import java.math.BigDecimal;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class SearchCriteria {
-    private Integer paginationNumber;
+@SuperBuilder
+public class SearchCriteria extends PagingParams{
     private String keyWords;
     private String searchCategory;
-    private Integer priceFrom;
-    private Integer priceTo;
+    private BigDecimal priceFrom;
+    private BigDecimal priceTo;
 }
