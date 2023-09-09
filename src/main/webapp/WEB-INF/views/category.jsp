@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <html>
 <head>
@@ -13,21 +14,24 @@
 </head>
 <body>
 <jsp:include page="header.jsp"/>
-<div class="files">
-    <form method="POST" action="<c:url value="/categories/csv/exportProducts"/>">
-        <input id="categoryNameSave" name="categoryName" value="${categoryName}" hidden>
-        <button type="submit" class="btn btn-primary">Экспорт продуктов</button>
-    </form>
-    <form method="POST" action="<c:url value="/categories/csv/importProducts"/>" enctype="multipart/form-data" class="file-import">
-        <input id="categoryNameLoad" name="categoryName" value="${categoryName}" hidden>
-        <label class="label">
-            <i>&#128204</i>
-            <input id="file" name="file" type="file" class="title" accept=".csv">
-        </label>
-        <button type="submit" class="btn btn-primary">Импорт продуктов</button>
-    </form>
-</div>
-<div class="container-fluid">
+<sec:authorize access="hasRole('ADMIN')">
+    <div class="files">
+        <form method="POST" action="<c:url value="/categories/csv/exportProducts"/>">
+            <input id="categoryNameSave" name="categoryName" value="${categoryName}" hidden>
+            <button type="submit" class="btn btn-primary">Экспорт продуктов</button>
+        </form>
+        <form method="POST" action="<c:url value="/categories/csv/importProducts"/>" enctype="multipart/form-data"
+              class="file-import">
+            <input id="categoryNameLoad" name="categoryName" value="${categoryName}" hidden>
+            <label class="label">
+                <i>&#128204</i>
+                <input id="file" name="file" type="file" class="title" accept=".csv">
+            </label>
+            <button type="submit" class="btn btn-primary">Импорт продуктов</button>
+        </form>
+    </div>
+</sec:authorize>
+<div class="container-fluid products">
     <div class="row">
         <c:forEach items="${categoryProducts}" var="product">
             <div class="col d-flex justify-content-center">
@@ -52,11 +56,18 @@
 <div class="pagination-management">
     <nav class="pagination-nav">
         <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="<c:url value="/categories/${categoryName}/paging?pageNumber=${params.getPageNumber() - 1}"/>"><<</a></li>
-            <li class="page-item"><a class="page-link" href="<c:url value="/categories/${categoryName}/paging?pageNumber=0"/>">1</a></li>
-            <li class="page-item"><a class="page-link" href="<c:url value="/categories/${categoryName}/paging?pageNumber=1"/>">2</a></li>
-            <li class="page-item"><a class="page-link" href="<c:url value="/categories/${categoryName}/paging?pageNumber=2"/>">3</a></li>
-            <li class="page-item"><a class="page-link" href="<c:url value="/categories/${categoryName}/paging?pageNumber=${params.getPageNumber() + 1}"/>">>></a></li>
+            <li class="page-item"><a class="page-link"
+                                     href="<c:url value="/categories/${categoryName}/paging?pageNumber=${params.getPageNumber() - 1}"/>"><<</a>
+            </li>
+            <li class="page-item"><a class="page-link"
+                                     href="<c:url value="/categories/${categoryName}/paging?pageNumber=0"/>">1</a></li>
+            <li class="page-item"><a class="page-link"
+                                     href="<c:url value="/categories/${categoryName}/paging?pageNumber=1"/>">2</a></li>
+            <li class="page-item"><a class="page-link"
+                                     href="<c:url value="/categories/${categoryName}/paging?pageNumber=2"/>">3</a></li>
+            <li class="page-item"><a class="page-link"
+                                     href="<c:url value="/categories/${categoryName}/paging?pageNumber=${params.getPageNumber() + 1}"/>">>></a>
+            </li>
         </ul>
     </nav>
     <div class="dropdown">
@@ -66,7 +77,8 @@
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <c:forEach begin="1" end="9" var="pageSize">
-                <a class="dropdown-item" href="<c:url value="/categories/${categoryName}/paging?pageSize=${pageSize}"/>">${pageSize}</a>
+                <a class="dropdown-item"
+                   href="<c:url value="/categories/${categoryName}/paging?pageSize=${pageSize}"/>">${pageSize}</a>
             </c:forEach>
         </div>
     </div>

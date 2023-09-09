@@ -30,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -56,6 +57,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final OrdersProductsConverter ordersProductsConverter;
     private final OrderRepository orderRepository;
+    private final PasswordEncoder encoder;
 
     @Override
     public Optional<User> getUserByEmail(String email) {
@@ -113,17 +115,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Statistics getUserStatistics(int id) {
+        String favoriteCategory = userRepository.getUserFavoriteCategory(id);
         return Statistics.builder().userId(id).daysRegistered(userRepository.getUserDaysRegistered(id)).
                 orderCount(userRepository.getUserOrdersCount(id)).
                 booksCount(userRepository.getUserPurchasedBooksCount(id)).
-                favoriteGenre(userRepository.getUserFavoriteCategory(id)).build();
+                favoriteGenre(favoriteCategory == null ? "Неизвестен" : favoriteCategory).build();
     }
 
     @Override
     @Transactional
-    public ModelAndView makeOrder(User user, Cart cart) throws InsufficientFundsException, NoProductsInOrderException {
+    public ModelAndView makeOrder(User user, Cart cart) throws InsufficientFundsException, NoProductsInOrderException, NoResourceFoundException {
         BigDecimal orderPrice = cart.getPrice();
-        if (user.getBalance().compareTo(orderPrice) < 0) {
+        if (userRepository.findById(user.getId()).map(User::getBalance).
+                orElseThrow(() -> new NoResourceFoundException("No user with id " + user.getId() + " found")).
+                compareTo(orderPrice) < 0) {
             throw new InsufficientFundsException("Недостаточно средств");
         }
         if (cart.isEmpty()) {
@@ -180,6 +185,7 @@ public class UserServiceImpl implements UserService {
         ModelAndView modelAndView = new ModelAndView(PagesPaths.REGISTER_PAGE);
         user.setBalance(BigDecimal.valueOf(0.0));
         user.setRegistrationDate(LocalDate.now());
+        user.setPassword(encoder.encode(user.getPassword()));
         if (getUserByEmail(user.getEmail()).isPresent()) {
             throw new UserAlreadyExistsException("Такой пользователь уже существует");
         }

@@ -4,7 +4,7 @@ import by.teachmeskills.springbootproject.constants.RequestAttributesNames;
 import by.teachmeskills.springbootproject.constants.SessionAttributesNames;
 import by.teachmeskills.springbootproject.constants.Values;
 import by.teachmeskills.springbootproject.entities.PagingParams;
-import by.teachmeskills.springbootproject.entities.User;
+import by.teachmeskills.springbootproject.principal.SecurityContextUtils;
 import by.teachmeskills.springbootproject.services.CategoryService;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/home")
@@ -31,10 +31,9 @@ public class HomeController {
     private final CategoryService categoryService;
 
     @GetMapping
-    public ModelAndView openHomePage(@SessionAttribute(SessionAttributesNames.USER) User user,
-                                     @ModelAttribute(SessionAttributesNames.CATEGORY_PAGING_PARAMS) PagingParams params) {
+    public ModelAndView openHomePage(@ModelAttribute(SessionAttributesNames.CATEGORY_PAGING_PARAMS) PagingParams params) {
         ModelAndView modelAndView = categoryService.read(params);
-        modelAndView.addObject(RequestAttributesNames.USER, user);
+        modelAndView.addObject(RequestAttributesNames.USER, SecurityContextUtils.getUser().orElse(null));
         return modelAndView;
     }
 
