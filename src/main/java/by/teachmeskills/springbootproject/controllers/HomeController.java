@@ -4,7 +4,7 @@ import by.teachmeskills.springbootproject.constants.RequestAttributesNames;
 import by.teachmeskills.springbootproject.constants.SessionAttributesNames;
 import by.teachmeskills.springbootproject.constants.Values;
 import by.teachmeskills.springbootproject.entities.PagingParams;
-import by.teachmeskills.springbootproject.principal.SecurityContextUtils;
+import by.teachmeskills.springbootproject.utils.SecurityContextUtils;
 import by.teachmeskills.springbootproject.services.CategoryService;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
@@ -21,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/home")
@@ -49,7 +48,9 @@ public class HomeController {
 
     @GetMapping("/paging")
     public ModelAndView changePagingParams(@ModelAttribute(SessionAttributesNames.CATEGORY_PAGING_PARAMS) PagingParams params) {
-        return categoryService.read(params);
+        ModelAndView modelAndView = categoryService.read(params);
+        modelAndView.addObject(RequestAttributesNames.USER, SecurityContextUtils.getUser().orElse(null));
+        return modelAndView;
     }
 
     @ModelAttribute(SessionAttributesNames.CATEGORY_PAGING_PARAMS)

@@ -13,7 +13,7 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 @AllArgsConstructor
 public class StudentEndpoint {
 
-    private static final String NAMESPACE_URI = "http://www.baeldung.com/springsoap/gen";
+    private static final String NAMESPACE_URI = "https://www.baeldung.com/springsoap/gen";
 
     private StudentRepository studentRepository;
 

@@ -7,7 +7,7 @@ import by.teachmeskills.springbootproject.entities.Cart;
 import by.teachmeskills.springbootproject.exceptions.InsufficientFundsException;
 import by.teachmeskills.springbootproject.exceptions.NoProductsInOrderException;
 import by.teachmeskills.springbootproject.exceptions.NoResourceFoundException;
-import by.teachmeskills.springbootproject.principal.SecurityContextUtils;
+import by.teachmeskills.springbootproject.utils.SecurityContextUtils;
 import by.teachmeskills.springbootproject.services.ProductService;
 import by.teachmeskills.springbootproject.services.UserService;
 import lombok.RequiredArgsConstructor;

@@ -6,7 +6,7 @@ import by.teachmeskills.springbootproject.constants.Values;
 import by.teachmeskills.springbootproject.entities.BaseEntity;
 import by.teachmeskills.springbootproject.entities.PagingParams;
 import by.teachmeskills.springbootproject.entities.User;
-import by.teachmeskills.springbootproject.principal.SecurityContextUtils;
+import by.teachmeskills.springbootproject.utils.SecurityContextUtils;
 import by.teachmeskills.springbootproject.services.UserService;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;

@@ -9,7 +9,6 @@ import by.teachmeskills.springbootproject.entities.Order;
 import by.teachmeskills.springbootproject.entities.PagingParams;
 import by.teachmeskills.springbootproject.entities.Statistics;
 import by.teachmeskills.springbootproject.entities.User;
-import by.teachmeskills.springbootproject.exceptions.AuthorizationException;
 import by.teachmeskills.springbootproject.exceptions.InsufficientFundsException;
 import by.teachmeskills.springbootproject.exceptions.NoProductsInOrderException;
 import by.teachmeskills.springbootproject.exceptions.NoResourceFoundException;
@@ -33,7 +32,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -60,24 +58,17 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder encoder;
 
     @Override
-    public Optional<User> getUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public ModelAndView processLoginPage(String error) {
+        ModelAndView modelAndView = new ModelAndView(PagesPaths.LOGIN_PAGE);
+        if (error != null) {
+            modelAndView.addObject("status", "Неверный логин или пароль");
+        }
+        return modelAndView;
     }
 
     @Override
-    public ModelAndView authenticateUser(String email, String password, BindingResult bindingResult, Model model) throws AuthorizationException {
-        ModelAndView modelAndView = new ModelAndView(PagesPaths.LOGIN_PAGE);
-        if (!bindingResult.hasFieldErrors(RequestAttributesNames.EMAIL) && !bindingResult.hasFieldErrors(RequestAttributesNames.PASSWORD)) {
-            Optional<User> authenticatedUser = userRepository.findByEmailAndPassword(email, password);
-            if (authenticatedUser.isPresent()) {
-                model.addAttribute(RequestAttributesNames.USER, authenticatedUser.get());
-                return new ModelAndView("redirect:" + PagesPaths.HOME_PAGE);
-            }
-            throw new AuthorizationException("Неверный логин или пароль");
-        }
-        ErrorPopulatorUtils.populateError(RequestAttributesNames.EMAIL, modelAndView, bindingResult);
-        ErrorPopulatorUtils.populateError(RequestAttributesNames.PASSWORD, modelAndView, bindingResult);
-        return modelAndView;
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     public static ModelAndView makeModelAndView(User user, Statistics statistics, List<Order> orders) {

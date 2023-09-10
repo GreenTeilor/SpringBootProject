@@ -5,16 +5,12 @@ import by.teachmeskills.springbootproject.entities.User;
 import by.teachmeskills.springbootproject.principal.UserPrincipal;
 import by.teachmeskills.springbootproject.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 //There are two methods for defining permission - hasRole and hasAuthority.
 //The first doesn't require ROLE_ prefix.
