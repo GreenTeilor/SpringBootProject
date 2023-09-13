@@ -5,7 +5,6 @@
     <jsp:include page="dependencies.jsp"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="style/login_register.css" rel="stylesheet">
-    <link href="style/common.css" rel="stylesheet">
 </head>
 <body>
 <div class="wrapper">
