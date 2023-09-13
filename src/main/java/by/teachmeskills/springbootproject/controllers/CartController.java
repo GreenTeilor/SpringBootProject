@@ -4,20 +4,19 @@ import by.teachmeskills.springbootproject.constants.PagesPaths;
 import by.teachmeskills.springbootproject.constants.RequestAttributesNames;
 import by.teachmeskills.springbootproject.constants.SessionAttributesNames;
 import by.teachmeskills.springbootproject.entities.Cart;
-import by.teachmeskills.springbootproject.entities.User;
 import by.teachmeskills.springbootproject.exceptions.InsufficientFundsException;
 import by.teachmeskills.springbootproject.exceptions.NoProductsInOrderException;
 import by.teachmeskills.springbootproject.exceptions.NoResourceFoundException;
-import by.teachmeskills.springbootproject.exceptions.UserAlreadyExistsException;
+import by.teachmeskills.springbootproject.utils.SecurityContextUtils;
 import by.teachmeskills.springbootproject.services.ProductService;
 import by.teachmeskills.springbootproject.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -60,8 +59,10 @@ public class CartController {
 
 
     @GetMapping("/makeOrder")
-    public ModelAndView makeOrder(@SessionAttribute(SessionAttributesNames.USER) User user, @ModelAttribute(SessionAttributesNames.CART) Cart cart) throws InsufficientFundsException, NoProductsInOrderException {
-        return userService.makeOrder(user, cart);
+    @PreAuthorize("isAuthenticated()")
+    public ModelAndView makeOrder(@ModelAttribute(SessionAttributesNames.CART) Cart cart)
+            throws InsufficientFundsException, NoProductsInOrderException, NoResourceFoundException {
+        return userService.makeOrder(SecurityContextUtils.getUser().orElse(null), cart);
     }
 
 

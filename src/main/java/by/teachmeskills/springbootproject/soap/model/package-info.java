@@ -5,5 +5,5 @@
 // Generated on: 2023.08.20 at 01:17:40 PM MSK 
 //
 
-@jakarta.xml.bind.annotation.XmlSchema(namespace = "http://www.baeldung.com/springsoap/gen", elementFormDefault = jakarta.xml.bind.annotation.XmlNsForm.QUALIFIED)
+@jakarta.xml.bind.annotation.XmlSchema(namespace = "https:///www.baeldung.com/springsoap/gen", elementFormDefault = jakarta.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package by.teachmeskills.springbootproject.soap.model;

@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+
 <html>
 <head>
     <title>Home</title>
@@ -11,32 +13,35 @@
 </head>
 <body>
 <jsp:include page="header.jsp"/>
-<c:if test="${sessionScope.user != null}">
+<c:if test="${user != null}">
     <jsp:include page="info.jsp"/>
 </c:if>
-<div class="files">
-    <form method="POST" action="<c:url value="/home/csv/exportCategories"/>">
-        <button type="submit" class="btn btn-primary">Экспорт категорий</button>
-    </form>
-    <form method="POST" action="<c:url value="/home/csv/importCategories"/>" enctype="multipart/form-data"
-          class="file-import">
-        <label class="label">
-            <i>&#128204</i>
-            <input id="file" name="file" type="file" class="title" accept=".csv">
-        </label>
-        <button type="submit" class="btn btn-primary">Импорт категорий</button>
-    </form>
-</div>
-<div class="container-fluid">
+<sec:authorize access="hasRole('ADMIN')">
+    <div class="files">
+        <form method="POST" action="<c:url value="/home/csv/exportCategories"/>">
+            <button type="submit" class="btn btn-primary">Экспорт категорий</button>
+        </form>
+        <form method="POST" action="<c:url value="/home/csv/importCategories"/>" enctype="multipart/form-data"
+              class="file-import">
+            <label class="label">
+                <i>&#128204</i>
+                <input id="file" name="file" type="file" class="title" accept=".csv">
+            </label>
+            <button type="submit" class="btn btn-primary">Импорт категорий</button>
+        </form>
+    </div>
+</sec:authorize>
+<div class="container-fluid categories">
     <div class="row">
         <c:forEach items="${categories}" var="item">
             <div class="col d-flex justify-content-center">
                 <div class="card"
                      style="width: 22rem; margin: 20px 0 20px 0; background-color: #dee2e6 !important; border-radius: 40px;">
-                    <a href="<c:url value="/categories/${item.getName()}"/>"><img src="<c:url value="/${item.getImagePath()}"/>"
-                                                                class="card-img-top"
-                                                                style="height: 25rem; border-radius: 40px 40px 0 0;"
-                                                                alt="..."></a>
+                    <a href="<c:url value="/categories/${item.getName()}"/>"><img
+                            src="<c:url value="/${item.getImagePath()}"/>"
+                            class="card-img-top"
+                            style="height: 25rem; border-radius: 40px 40px 0 0;"
+                            alt="..."></a>
                     <div class="card-body" style="text-align: center">
                         <h2 class="card-title">${item.getName()}</h2>
                         <a href="<c:url value="/categories/${item.getName()}"/>" class="btn btn-primary">Перейти</a>
@@ -50,11 +55,15 @@
 <div class="pagination-management">
     <nav class="pagination-nav">
         <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="<c:url value="/home/paging?pageNumber=${params.getPageNumber() - 1}"/>"><<</a></li>
+            <li class="page-item"><a class="page-link"
+                                     href="<c:url value="/home/paging?pageNumber=${params.getPageNumber() - 1}"/>"><<</a>
+            </li>
             <li class="page-item"><a class="page-link" href="<c:url value="/home/paging?pageNumber=0"/>">1</a></li>
             <li class="page-item"><a class="page-link" href="<c:url value="/home/paging?pageNumber=1"/>">2</a></li>
             <li class="page-item"><a class="page-link" href="<c:url value="/home/paging?pageNumber=2"/>">3</a></li>
-            <li class="page-item"><a class="page-link" href="<c:url value="/home/paging?pageNumber=${params.getPageNumber() + 1}"/>">>></a></li>
+            <li class="page-item"><a class="page-link"
+                                     href="<c:url value="/home/paging?pageNumber=${params.getPageNumber() + 1}"/>">>></a>
+            </li>
         </ul>
     </nav>
     <div class="dropdown">

@@ -1,6 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+
 <html>
 <head>
     <title>Профиль</title>
@@ -118,16 +120,19 @@
     <div class="history">
         <div class="count-data text-center">
             <h6 class="count h2" data-to="500" data-speed="500">История заказов</h6>
-            <form method="POST" action="<c:url value="/profile/csv/exportOrders"/>">
-                <button type="submit" class="btn btn-primary">Экспорт заказов</button>
-            </form>
-            <form method="POST" action="<c:url value="/profile/csv/importOrders"/>" enctype="multipart/form-data" class="file-import">
-                <label class="label">
-                    <i>&#128204</i>
-                    <input id="file" name="file" type="file" class="title" accept=".csv">
-                </label>
-                <button type="submit" class="btn btn-primary">Импорт заказов</button>
-            </form>
+            <sec:authorize access="hasRole('ADMIN')">
+                <form method="POST" action="<c:url value="/profile/csv/exportOrders"/>">
+                    <button type="submit" class="btn btn-primary">Экспорт заказов</button>
+                </form>
+                <form method="POST" action="<c:url value="/profile/csv/importOrders"/>" enctype="multipart/form-data"
+                      class="file-import">
+                    <label class="label">
+                        <i>&#128204</i>
+                        <input id="file" name="file" type="file" class="title" accept=".csv">
+                    </label>
+                    <button type="submit" class="btn btn-primary">Импорт заказов</button>
+                </form>
+            </sec:authorize>
         </div>
     </div>
 
@@ -172,11 +177,15 @@
 <div class="pagination-management">
     <nav class="pagination-nav">
         <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="<c:url value="/profile/paging?pageNumber=${params.getPageNumber() - 1}"/>"><<</a></li>
+            <li class="page-item"><a class="page-link"
+                                     href="<c:url value="/profile/paging?pageNumber=${params.getPageNumber() - 1}"/>"><<</a>
+            </li>
             <li class="page-item"><a class="page-link" href="<c:url value="/profile/paging?pageNumber=0"/>">1</a></li>
             <li class="page-item"><a class="page-link" href="<c:url value="/profile/paging?pageNumber=1"/>">2</a></li>
             <li class="page-item"><a class="page-link" href="<c:url value="/profile/paging?pageNumber=2"/>">3</a></li>
-            <li class="page-item"><a class="page-link" href="<c:url value="/profile/paging?pageNumber=${params.getPageNumber() + 1}"/>">>></a></li>
+            <li class="page-item"><a class="page-link"
+                                     href="<c:url value="/profile/paging?pageNumber=${params.getPageNumber() + 1}"/>">>></a>
+            </li>
         </ul>
     </nav>
     <div class="dropdown">

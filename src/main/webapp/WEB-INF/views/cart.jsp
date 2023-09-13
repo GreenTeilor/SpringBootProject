@@ -8,6 +8,7 @@
     <jsp:include page="dependencies.jsp"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="<c:url value="/style/common.css"/>" rel="stylesheet">
+    <link href="<c:url value="/style/cart.css"/>" rel="stylesheet">
 </head>
 <body>
 <jsp:include page="header.jsp"/>
@@ -33,11 +34,17 @@
         </c:forEach>
     </div>
 </div>
-<p style="text-align: center">
-    <a href="<c:url value="/cart/makeOrder"/>" class="btn btn-primary btn-rounded"
-       style="font-size: 1.5rem; margin: 10px">Оформить заказ</a>
-    <a href="<c:url value="/cart/clear"/>" class="btn btn-primary btn-rounded" style="font-size: 1.5rem; margin: 10px">Очистить</a>
-    <a style="color: ${color}">${status}</a>
-</p>
+<div class="cart-info">
+    <div>
+        <a href="<c:url value="/cart/makeOrder"/>" class="btn btn-primary btn-rounded">Оформить заказ</a>
+        <a href="<c:url value="/cart/clear"/>" class="btn btn-primary btn-rounded">Очистить</a>
+    </div>
+    <div>
+        <a>Цена: ${cart.getPrice()}</a>
+    </div>
+    <div>
+        <a style="color: ${color}">${status}</a>
+    </div>
+</div>
 </body>
 </html>
